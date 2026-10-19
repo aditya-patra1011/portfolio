@@ -9,12 +9,15 @@ const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
 
 <BaseLayout title="Projects" description="Machine-learning and data projects by M. Aditya Patra.">
   <section class="wrap head">
-    <p class="eyebrow">{projects.length} projects</p>
-    <h1>Projects</h1>
-    <p>Each one has a write-up covering the problem, the data, what I tried, and what I'd change.</p>
+    <p class="eyebrow">index</p>
+    <h1>~/projects<span class="caret" aria-hidden="true"></span></h1>
+    <p class="sub">
+      <span class="neon" data-count>{projects.length}</span> entries. Each one has a write-up covering the problem, the data, what I tried, and what I'd change.
+    </p>
     <div class="filters" role="group" aria-label="Filter by domain">
-      <button type="button" data-filter="all" aria-pressed="true">All</button>
-      {domains.map((d) => <button type="button" data-filter={d} aria-pressed="false">{d}</button>)}
+      <span class="mono label">--filter</span>
+      <button type="button" data-filter="all" aria-pressed="true">all</button>
+      {domains.map((d) => <button type="button" data-filter={d} aria-pressed="false">{d.toLowerCase()}</button>)}
     </div>
   </section>
 
@@ -34,13 +37,17 @@ const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
 <script>
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
   const items = document.querySelectorAll<HTMLElement>(".item");
+  const count = document.querySelector<HTMLElement>("[data-count]");
   buttons.forEach((btn) =>
     btn.addEventListener("click", () => {
       const f = btn.dataset.filter!;
       buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      let shown = 0;
       items.forEach((el) => {
         el.hidden = f !== "all" && !el.dataset.domains!.split("|").includes(f);
+        if (!el.hidden) shown++;
       });
+      if (count) count.textContent = String(shown);
     }),
   );
 </script>
@@ -50,34 +57,47 @@ const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
     padding-block: clamp(48px, 8vw, 96px) 32px;
   }
   h1 {
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 5vw, 3.2rem);
     margin-top: 12px;
+    letter-spacing: -0.03em;
   }
-  .head p:not(.eyebrow) {
+  .sub {
     color: var(--ink-2);
-    max-width: 60ch;
+    max-width: 62ch;
   }
   .filters {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
     margin-top: 24px;
   }
+  .label {
+    color: var(--ink-3);
+    margin-right: 4px;
+  }
   .filters button {
     font: inherit;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: none;
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    border-radius: 2px;
+    border: 1px solid var(--line-2);
+    background: rgba(3, 6, 4, 0.6);
     color: var(--ink-2);
     cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+  }
+  .filters button:hover {
+    border-color: var(--neon-dim);
+    color: var(--ink);
   }
   .filters button[aria-pressed="true"] {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--neon);
+    border-color: var(--neon);
     color: var(--bg);
+    font-weight: 700;
+    box-shadow: var(--glow);
   }
   .grid-wrap {
     padding-bottom: clamp(56px, 9vw, 112px);

@@ -13,7 +13,7 @@ const { title, summary, year, stack, status } = project.data;
   <span class="mono year">{year}</span>
   <div>
     <a href={`/projects/${project.id}/`} class="title">{title}</a>
-    {status === "in-progress" && <span class="status" data-status={status}>In progress</span>}
+    {status === "in-progress" && <span class="status" data-status={status}>RUNNING</span>}
     <p>{summary}</p>
   </div>
   <span class="mono stack">{stack.slice(0, 3).join(" · ")}</span>
@@ -26,9 +26,14 @@ const { title, summary, year, stack, status } = project.data;
     gap: 16px;
     align-items: baseline;
     padding-block: 16px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px dashed var(--line);
   }
-  .year,
+  .row:last-child {
+    border-bottom: 0;
+  }
+  .year {
+    color: var(--neon-dim);
+  }
   .stack {
     color: var(--ink-3);
   }
@@ -37,10 +42,14 @@ const { title, summary, year, stack, status } = project.data;
     text-decoration: none;
     margin-right: 10px;
   }
+  .title::before {
+    content: "> ";
+    color: var(--neon);
+  }
   p {
     margin: 4px 0 0;
     color: var(--ink-2);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
   @media (max-width: 640px) {
     .row {

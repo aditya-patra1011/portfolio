@@ -2,9 +2,9 @@
 import { site } from "../data/site";
 
 const nav = [
-  { href: "/projects/", label: "Projects" },
-  { href: "/about/", label: "About" },
-  { href: `mailto:${site.links.email}`, label: "Contact" },
+  { href: "/projects/", label: "projects" },
+  { href: "/about/", label: "about" },
+  { href: `mailto:${site.links.email}`, label: "contact" },
 ];
 const path = Astro.url.pathname;
 ---
@@ -12,94 +12,75 @@ const path = Astro.url.pathname;
 <header class="header">
   <div class="wrap bar">
     <a href="/" class="brand" aria-label="Home">
-      <span class="dot" aria-hidden="true"></span>{site.shortName}
+      <span class="prompt">~/</span>aditya<span class="long">_patra</span><span class="caret" aria-hidden="true"></span>
     </a>
     <nav aria-label="Main">
       {
         nav.map((item) => (
           <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
+            <span class="dot">./</span>
             {item.label}
           </a>
         ))
       }
-      <button class="theme" type="button" aria-label="Toggle colour theme">
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
-          <path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"></path>
-        </svg>
-      </button>
     </nav>
   </div>
 </header>
-
-<script>
-  const btn = document.querySelector<HTMLButtonElement>(".theme");
-  btn?.addEventListener("click", () => {
-    const root = document.documentElement;
-    const current =
-      root.dataset.theme ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem("theme", next);
-    } catch {}
-  });
-</script>
 
 <style>
   .header {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: color-mix(in srgb, var(--bg) 85%, transparent);
-    backdrop-filter: blur(10px);
+    background: rgba(3, 6, 4, 0.78);
+    backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--line);
   }
   .bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    height: 58px;
+    gap: 16px;
   }
   .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
     font-weight: 700;
+    font-size: 0.95rem;
     text-decoration: none;
+    white-space: nowrap;
   }
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
+  .prompt {
+    color: var(--neon);
+    text-shadow: var(--glow);
+  }
+  .brand .caret {
+    width: 0.55em;
+    height: 1em;
   }
   nav {
     display: flex;
     align-items: center;
     gap: clamp(12px, 3vw, 28px);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
   nav a {
     text-decoration: none;
     color: var(--ink-2);
   }
+  .dot {
+    color: var(--ink-3);
+  }
   nav a[aria-current="page"] {
-    color: var(--ink);
-    font-weight: 600;
+    color: var(--neon);
+    text-shadow: var(--glow);
   }
-  .theme {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: none;
-    color: var(--ink-2);
-    cursor: pointer;
+  nav a[aria-current="page"] .dot {
+    color: var(--neon-dim);
   }
-  .theme:hover {
-    color: var(--accent);
+  @media (max-width: 520px) {
+    .long,
+    .dot {
+      display: none;
+    }
   }
 </style>

@@ -18,8 +18,8 @@ npm run build    # static output in dist/
 | `src/content/projects/*.md` | One case study per project; the file name is the URL slug |
 | `src/content.config.ts` | Frontmatter schema for projects (tier, status, stack, highlights...) |
 | `src/pages/` | Routes: home, `/projects`, `/projects/[slug]`, `/about`, 404 |
-| `src/components/` | Header, footer, project card and list row |
-| `src/styles/global.css` | Design tokens (light + dark) and shared styles |
+| `src/components/` | Header, footer, project card, list row, animated background |
+| `src/styles/global.css` | Design tokens (dark neon theme) and shared styles |
 | `public/` | Static files: favicon, project screenshots, `resume.pdf` |
 
 ## Adding a project

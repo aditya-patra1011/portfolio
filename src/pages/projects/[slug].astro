@@ -24,29 +24,37 @@ const { Content } = await render(project);
 <BaseLayout title={title} description={summary}>
   <article class="wrap">
     <header class="head">
-      <a class="mono back" href="/projects/">← All projects</a>
-      <p class="eyebrow">{domains.join(" / ")} · {year}</p>
+      <a class="mono back" href="/projects/">cd ../projects</a>
+      <p class="eyebrow">{domains.join(" / ").toLowerCase()} · {year}</p>
       <h1>{title}</h1>
       <p class="summary">{summary}</p>
     </header>
 
-    {cover && <img class="cover" src={cover} alt={`${title} screenshot`} />}
+    {
+      cover && (
+        <figure class="cover panel">
+          <figcaption class="mono">preview.png</figcaption>
+          <img src={cover} alt={`${title} screenshot`} />
+        </figure>
+      )
+    }
 
     <div class="layout">
-      <aside class="facts">
+      <aside class="facts panel">
+        <p class="mono file">$ cat meta.json</p>
         <dl>
           <div>
-            <dt class="eyebrow">Status</dt>
-            <dd><span class="status" data-status={status}>{status === "shipped" ? "Shipped" : "In progress"}</span></dd>
+            <dt>status</dt>
+            <dd><span class="status" data-status={status}>{status === "shipped" ? "SHIPPED" : "RUNNING"}</span></dd>
           </div>
           <div>
-            <dt class="eyebrow">Stack</dt>
+            <dt>stack</dt>
             <dd class="tags">{stack.map((s) => <span class="tag">{s}</span>)}</dd>
           </div>
           {
             highlights.length > 0 && (
               <div>
-                <dt class="eyebrow">Highlights</dt>
+                <dt>highlights</dt>
                 <dd>
                   <ul>
                     {highlights.map((h) => (
@@ -59,8 +67,8 @@ const { Content } = await render(project);
           }
         </dl>
         <div class="links">
-          <a class="btn" href={repo}>Source code</a>
-          {demo && <a class="btn primary" href={demo}>Live demo</a>}
+          <a class="btn" href={repo}>source</a>
+          {demo && <a class="btn primary" href={demo}>live_demo</a>}
         </div>
       </aside>
 
@@ -69,8 +77,8 @@ const { Content } = await render(project);
       </div>
     </div>
 
-    <nav class="next" aria-label="Next project">
-      <span class="eyebrow">Next project</span>
+    <nav class="next panel" aria-label="Next project">
+      <span class="mono dim">$ next</span>
       <a href={`/projects/${next.id}/`}>{next.data.title} →</a>
     </nav>
   </article>
@@ -79,7 +87,7 @@ const { Content } = await render(project);
 <style>
   .head {
     padding-block: clamp(40px, 7vw, 80px) 32px;
-    max-width: 820px;
+    max-width: 860px;
   }
   .back {
     display: inline-block;
@@ -87,43 +95,66 @@ const { Content } = await render(project);
     text-decoration: none;
     color: var(--ink-3);
   }
+  .back::before {
+    content: "$ ";
+    color: var(--neon);
+  }
   h1 {
-    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    font-size: clamp(2.4rem, 6vw, 4rem);
     margin-top: 12px;
+    letter-spacing: -0.035em;
   }
   .summary {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     color: var(--ink-2);
     margin: 18px 0 0;
   }
   .cover {
+    margin: 0 0 40px;
+    overflow: hidden;
+  }
+  figcaption {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-3);
+  }
+  .cover img {
     width: 100%;
     max-height: 520px;
     object-fit: cover;
     object-position: top;
-    border-radius: var(--radius);
-    border: 1px solid var(--line);
-    margin-bottom: 40px;
   }
   .layout {
     display: grid;
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 280px 1fr;
     gap: clamp(32px, 5vw, 64px);
     align-items: start;
   }
   .facts {
     position: sticky;
-    top: 84px;
+    top: 82px;
     display: grid;
-    gap: 24px;
+    gap: 20px;
+    padding: 18px;
+  }
+  .file {
+    margin: 0;
+    color: var(--ink-3);
   }
   dl {
     display: grid;
-    gap: 20px;
+    gap: 16px;
     margin: 0;
   }
+  dt {
+    color: var(--cyan);
+    font-size: 0.78rem;
+  }
+  dt::after {
+    content: ":";
+  }
   dd {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
   }
   .tags {
     display: flex;
@@ -132,9 +163,16 @@ const { Content } = await render(project);
   }
   dd ul {
     margin: 0;
-    padding-left: 18px;
-    font-size: 0.9rem;
-    color: var(--ink-2);
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--ink);
+  }
+  dd li::before {
+    content: "▸ ";
+    color: var(--neon);
   }
   .links {
     display: flex;
@@ -149,15 +187,18 @@ const { Content } = await render(project);
     flex-direction: column;
     gap: 6px;
     margin-block: clamp(56px, 9vw, 96px);
-    padding-top: 24px;
-    border-top: 1px solid var(--line);
+    padding: 22px 24px;
+  }
+  .dim {
+    color: var(--ink-3);
   }
   .next a {
-    font-size: clamp(1.3rem, 3vw, 1.8rem);
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 700;
     text-decoration: none;
   }
-  @media (max-width: 820px) {
+  @media (max-width: 860px) {
     .layout {
       grid-template-columns: 1fr;
     }
