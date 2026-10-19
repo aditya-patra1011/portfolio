@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { getProjects } from "../../lib/projects";
+
+const projects = await getProjects();
+const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
+---
+
+<BaseLayout title="Projects" description="Machine-learning and data projects by M. Aditya Patra.">
+  <section class="wrap head">
+    <p class="eyebrow">{projects.length} projects</p>
+    <h1>Projects</h1>
+    <p>Each one has a write-up covering the problem, the data, what I tried, and what I'd change.</p>
+    <div class="filters" role="group" aria-label="Filter by domain">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      {domains.map((d) => <button type="button" data-filter={d} aria-pressed="false">{d}</button>)}
+    </div>
+  </section>
+
+  <section class="wrap grid-wrap">
+    <div class="grid">
+      {
+        projects.map((p) => (
+          <div class="item" data-domains={p.data.domains.join("|")}>
+            <ProjectCard project={p} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const items = document.querySelectorAll<HTMLElement>(".item");
+  buttons.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      const f = btn.dataset.filter!;
+      buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      items.forEach((el) => {
+        el.hidden = f !== "all" && !el.dataset.domains!.split("|").includes(f);
+      });
+    }),
+  );
+</script>
+
+<style>
+  .head {
+    padding-block: clamp(48px, 8vw, 96px) 32px;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    margin-top: 12px;
+  }
+  .head p:not(.eyebrow) {
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .filters button {
+    font: inherit;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .filters button[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .grid-wrap {
+    padding-bottom: clamp(56px, 9vw, 112px);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 20px;
+  }
+  .item {
+    display: flex;
+  }
+  .item > :global(*) {
+    flex: 1;
+  }
+  .item[hidden] {
+    display: none;
+  }
+</style>

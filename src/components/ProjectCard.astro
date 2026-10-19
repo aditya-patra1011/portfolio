@@ -1,0 +1,120 @@
+---
+import type { Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+  size?: "large" | "default";
+}
+
+const { project, size = "default" } = Astro.props;
+const { title, summary, status, domains, stack, highlights, year, cover } = project.data;
+const href = `/projects/${project.id}/`;
+---
+
+<article class:list={["card", size]}>
+  {cover && <img src={cover} alt="" loading="lazy" class="cover" />}
+  <div class="body">
+    <div class="meta">
+      <span class="status" data-status={status}>{status === "shipped" ? "Shipped" : "In progress"}</span>
+      <span class="mono">{year} · {domains.join(" / ")}</span>
+    </div>
+    <h3><a href={href}>{title}</a></h3>
+    <p class="summary">{summary}</p>
+    {
+      size === "large" && highlights.length > 0 && (
+        <ul class="highlights">
+          {highlights.map((h) => (
+            <li>{h}</li>
+          ))}
+        </ul>
+      )
+    }
+    <div class="stack">
+      {stack.slice(0, size === "large" ? 8 : 5).map((s) => <span class="tag">{s}</span>)}
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover {
+      transform: translateY(-2px);
+    }
+  }
+  .cover {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top;
+    border-bottom: 1px solid var(--line);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    flex: 1;
+  }
+  .large .body {
+    padding: clamp(22px, 3vw, 32px);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--ink-3);
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+  .large h3 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+  }
+  /* Whole card is clickable via the title link. */
+  h3 a {
+    text-decoration: none;
+  }
+  h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .summary {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .highlights {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink);
+  }
+  .highlights li::before {
+    content: "→ ";
+    color: var(--accent);
+  }
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+</style>

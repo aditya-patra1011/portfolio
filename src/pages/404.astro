@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Not found">
+  <section class="wrap">
+    <p class="eyebrow">404</p>
+    <h1>Lost signal.</h1>
+    <p>That page drifted out of range.</p>
+    <a class="btn primary" href="/">Back home</a>
+  </section>
+</BaseLayout>
+
+<style>
+  section {
+    padding-block: clamp(80px, 14vw, 160px);
+  }
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    margin-top: 12px;
+  }
+  p:not(.eyebrow) {
+    color: var(--ink-2);
+    margin: 12px 0 28px;
+  }
+</style>

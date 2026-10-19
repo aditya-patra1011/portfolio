@@ -1,0 +1,54 @@
+---
+import type { Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { title, summary, year, stack, status } = project.data;
+---
+
+<li class="row">
+  <span class="mono year">{year}</span>
+  <div>
+    <a href={`/projects/${project.id}/`} class="title">{title}</a>
+    {status === "in-progress" && <span class="status" data-status={status}>In progress</span>}
+    <p>{summary}</p>
+  </div>
+  <span class="mono stack">{stack.slice(0, 3).join(" · ")}</span>
+</li>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 16px;
+    align-items: baseline;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .year,
+  .stack {
+    color: var(--ink-3);
+  }
+  .title {
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  p {
+    margin: 4px 0 0;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .stack {
+      display: none;
+    }
+  }
+</style>

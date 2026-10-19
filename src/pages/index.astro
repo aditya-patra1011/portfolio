@@ -1,0 +1,184 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import ProjectRow from "../components/ProjectRow.astro";
+import { getProjects, byTier } from "../lib/projects";
+import { site, skills } from "../data/site";
+
+const projects = await getProjects();
+const flagship = byTier(projects, "flagship");
+const featured = byTier(projects, "featured");
+const more = byTier(projects, "more");
+---
+
+<BaseLayout>
+  <section class="hero wrap">
+    <p class="eyebrow">{site.role} · {site.location}</p>
+    <h1>
+      Hi, I'm {site.shortName.split(" ")[0]}.<br />
+      <span class="lede">I turn public data into ML systems you can actually inspect.</span>
+    </h1>
+    <p class="tagline">{site.tagline}</p>
+    <div class="cta">
+      <a class="btn primary" href="/projects/">See the work</a>
+      <a class="btn" href={site.links.github}>GitHub</a>
+    </div>
+    <a class="now" href={`/projects/${site.now.project}/`}>
+      <span class="pulse" aria-hidden="true"></span>
+      <span class="mono">Now</span>
+      <span>{site.now.text}</span>
+    </a>
+  </section>
+
+  <section class="section wrap" id="work">
+    <div class="section-head">
+      <h2>Flagship work</h2>
+      <a class="mono" href="/projects/">All projects →</a>
+    </div>
+    <div class="flagship">
+      {flagship.map((p) => <ProjectCard project={p} size="large" />)}
+    </div>
+
+    <div class="grid">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  {
+    more.length > 0 && (
+      <section class="wrap more">
+        <div class="section-head">
+          <h2>More projects</h2>
+        </div>
+        <ul class="list">
+          {more.map((p) => (
+            <ProjectRow project={p} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="section wrap">
+    <div class="section-head">
+      <h2>Toolkit</h2>
+      <a class="mono" href="/about/">More about me →</a>
+    </div>
+    <dl class="skills">
+      {
+        skills.map((s) => (
+          <div>
+            <dt class="eyebrow">{s.group}</dt>
+            <dd>{s.items.join(", ")}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="contact wrap">
+    <h2>Looking for an ML / data internship or graduate role.</h2>
+    <p>The fastest way to reach me is email. I usually reply within a day.</p>
+    <a class="btn primary" href={`mailto:${site.links.email}`}>{site.links.email}</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(64px, 12vw, 140px) clamp(40px, 6vw, 72px);
+  }
+  h1 {
+    font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+    font-weight: 700;
+    margin-top: 18px;
+    max-width: 18ch;
+  }
+  .lede {
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .tagline {
+    max-width: 60ch;
+    font-size: 1.1rem;
+    color: var(--ink-2);
+    margin: 24px 0 0;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .now {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    padding: 10px 16px;
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    text-decoration: none;
+    max-width: 100%;
+  }
+  .now .mono {
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .pulse {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      50% {
+        opacity: 0.3;
+      }
+    }
+  }
+  .flagship {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 20px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 24px;
+    margin: 0;
+  }
+  dd {
+    margin: 8px 0 0;
+    color: var(--ink-2);
+  }
+  .contact {
+    padding-block: clamp(56px, 9vw, 112px);
+    border-top: 1px solid var(--line);
+  }
+  .contact h2 {
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    max-width: 22ch;
+  }
+  .contact p {
+    color: var(--ink-2);
+    margin: 16px 0 28px;
+  }
+</style>
