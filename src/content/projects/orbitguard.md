@@ -12,6 +12,7 @@ highlights:
   - 47,753 conjunctions under 5 km found in one run
   - Linear pre-filter made the pipeline ~6x faster with identical results
 repo: https://github.com/aditya-patra1011/Orbitguard
+cover: /projects/orbitguard.svg
 ---
 
 ## The problem

@@ -41,5 +41,4 @@ is. BoxBox tries to answer those questions with data from the 2024 Formula 1 sea
 - **Finding bugs changed the conclusions.** A safety-car probability that silently returned zero and a
   failing Cox model had been flattening the risk scores. Fixing them produced real variation between circuits.
 
-<!-- TODO: add a screenshot at public/projects/boxbox.png (the repo's docs/dash_app/strategy.png works). -->
 <!-- TODO: one paragraph on what you'd do differently. -->

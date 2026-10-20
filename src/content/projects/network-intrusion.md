@@ -8,6 +8,7 @@ year: 2026
 domains: [Cybersecurity, Data Science]
 stack: [Python, pandas, SciPy, scikit-learn]
 repo: https://github.com/aditya-patra1011/Network-Intrusion-Cybersecurity-Analysis
+cover: /projects/network-importance.png
 ---
 
 ## Overview

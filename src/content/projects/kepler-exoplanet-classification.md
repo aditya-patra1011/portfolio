@@ -11,6 +11,7 @@ highlights:
   - F1 ≈ 0.996 with the full feature set
   - F1 ≈ 0.94 using raw physical measurements only
 repo: https://github.com/aditya-patra1011/kepler-exoplanet-classification
+cover: /projects/kepler-data-explorer.png
 ---
 
 ## The problem
@@ -33,4 +34,8 @@ strong, and it is an honest measure of what the model learns from the data itsel
 
 A five-tab Streamlit app for exploring the data, comparing models and reviewing the methodology audit.
 
-<!-- TODO: add a screenshot and, if hosted, a demo link in the frontmatter. -->
+![Model comparison on the raw-physical feature tier](/projects/kepler-raw-tier.png)
+
+![SHAP explorer showing which features drive predictions](/projects/kepler-shap.png)
+
+<!-- TODO: if the dashboard is hosted, add a demo link in the frontmatter. -->

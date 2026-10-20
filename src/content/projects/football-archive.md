@@ -8,6 +8,7 @@ year: 2026
 domains: [Sport, Databases]
 stack: [MySQL, SQL]
 repo: https://github.com/aditya-patra1011/football-archive
+cover: /projects/football-erd.png
 ---
 
 ## Overview

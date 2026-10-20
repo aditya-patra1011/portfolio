@@ -11,6 +11,7 @@ highlights:
   - 3.21% of evaluated planets fall in the conservative habitable zone
   - Confirmed vs predicted-real candidates agree (3.22% vs 3.16%)
 repo: https://github.com/aditya-patra1011/exoplanet-habitability-project
+cover: /projects/habitability-ablation.png
 ---
 
 ## The problem
@@ -37,4 +38,8 @@ and Kepler-186f. That is a useful sanity check.
 
 NASA Exoplanet Archive via its TAP service: the KOI cumulative table (9,564 rows) and PSCompPars (6,366 rows).
 
-<!-- TODO: add a dashboard screenshot. -->
+## Dashboard
+
+![Insolation flux vs equilibrium temperature, coloured by habitable-zone status](/projects/habitability-scatter.png)
+
+![Top habitable candidates ranked by Earth Similarity Index](/projects/habitability-top.png)

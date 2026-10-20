@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" font-family="JetBrains Mono, Consolas, monospace">
+  <!-- Terminal capture of a real OrbitGuard run, taken from the project README. -->
+  <defs>
+    <radialGradient id="g" cx="78%" cy="30%" r="60%">
+      <stop offset="0" stop-color="#39ff8f" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#39ff8f" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#39ff8f" stroke-opacity="0.06"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="600" fill="#030604"/>
+  <rect width="1200" height="600" fill="url(#grid)"/>
+  <rect width="1200" height="600" fill="url(#g)"/>
+
+  <!-- orbit motif -->
+  <g transform="translate(960 190)" fill="none">
+    <circle r="62" fill="#062012" stroke="#39ff8f" stroke-opacity="0.5"/>
+    <ellipse rx="200" ry="70" transform="rotate(-20)" stroke="#39ff8f" stroke-opacity="0.35" stroke-dasharray="3 7"/>
+    <ellipse rx="240" ry="95" transform="rotate(15)" stroke="#46e8ff" stroke-opacity="0.3" stroke-dasharray="3 7"/>
+    <rect x="178" y="-74" width="7" height="7" fill="#39ff8f"/>
+    <rect x="-200" y="20" width="7" height="7" fill="#46e8ff"/>
+    <circle cx="-150" cy="-38" r="16" stroke="#ffb547" stroke-opacity="0.9"/>
+    <circle cx="-150" cy="-38" r="3" fill="#ffb547"/>
+  </g>
+
+  <g font-size="21">
+    <text x="48" y="70" fill="#39ff8f">$</text>
+    <text x="72" y="70" fill="#d8ffe7">orbitguard screen --group starlink --group oneweb</text>
+    <text x="72" y="100" fill="#d8ffe7">    --group cosmos-2251-debris ... --hours 24</text>
+
+    <text x="48" y="160" fill="#8dbb9f">Screened <tspan fill="#39ff8f" font-weight="700">14391</tspan> objects over 24 h in <tspan fill="#39ff8f" font-weight="700">273.0 s</tspan></text>
+    <text x="48" y="192" fill="#8dbb9f"><tspan fill="#39ff8f" font-weight="700">47753</tspan> conjunctions &lt; 5 km</text>
+    <text x="48" y="224" fill="#4d775d">(+61 co-orbital pairs flying in formation)</text>
+  </g>
+
+  <g font-size="18">
+    <line x1="48" y1="296" x2="1152" y2="296" stroke="#1c5634"/>
+    <text x="48" y="326" fill="#46e8ff">TCA (UTC)</text>
+    <text x="300" y="326" fill="#46e8ff">miss km</text>
+    <text x="430" y="326" fill="#46e8ff">v_rel km/s</text>
+    <text x="590" y="326" fill="#46e8ff">objects</text>
+    <line x1="48" y1="342" x2="1152" y2="342" stroke="#10301d"/>
+
+    <text x="48" y="378" fill="#d8ffe7">2026-10-20 18:21:46</text>
+    <text x="300" y="378" fill="#ffb547" font-weight="700">0.031</text>
+    <text x="430" y="378" fill="#d8ffe7">12.08</text>
+    <text x="590" y="378" fill="#8dbb9f">COSMOS 2251 DEB (34446) x FENGYUN 1C DEB (35105)</text>
+
+    <text x="48" y="414" fill="#d8ffe7">2026-10-20 05:32:56</text>
+    <text x="300" y="414" fill="#ffb547" font-weight="700">0.038</text>
+    <text x="430" y="414" fill="#d8ffe7">7.20</text>
+    <text x="590" y="414" fill="#8dbb9f">STARLINK-34500 (64613) x STARLINK-36966 (68044)</text>
+
+    <text x="48" y="450" fill="#4d775d">...</text>
+  </g>
+
+  <g font-size="21">
+    <text x="48" y="540" fill="#39ff8f">$</text>
+    <rect x="72" y="522" width="13" height="24" fill="#39ff8f"/>
+  </g>
+</svg>
