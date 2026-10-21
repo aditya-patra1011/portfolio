@@ -1,208 +1,209 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageBanner from "../../components/PageBanner.astro";
 import { getProjects, type Project } from "../../lib/projects";
 
 export async function getStaticPaths() {
   const projects = await getProjects();
   return projects.map((project, i) => ({
     params: { slug: project.id },
-    props: { project, next: projects[(i + 1) % projects.length] },
+    props: {
+      project,
+      prev: projects[(i - 1 + projects.length) % projects.length],
+      next: projects[(i + 1) % projects.length],
+    },
   }));
 }
 
 interface Props {
   project: Project;
+  prev: Project;
   next: Project;
 }
 
-const { project, next } = Astro.props;
+const { project, prev, next } = Astro.props;
 const { title, summary, status, year, domains, stack, highlights, repo, demo, cover } = project.data;
 const { Content } = await render(project);
 ---
 
 <BaseLayout title={title} description={summary}>
-  <article class="wrap">
-    <header class="head">
-      <a class="mono back" href="/projects/">cd ../projects</a>
-      <p class="eyebrow">{domains.join(" / ").toLowerCase()} · {year}</p>
-      <h1>{title}</h1>
-      <p class="summary">{summary}</p>
-    </header>
+  <PageBanner
+    title={title}
+    crumbs={[{ label: "Home", href: "/" }, { label: "Projects", href: "/projects/" }, { label: title }]}
+  />
 
-    {
-      cover && (
-        <figure class="cover panel">
-          <figcaption class="mono">preview.png</figcaption>
-          <img src={cover} alt={`${title} screenshot`} />
-        </figure>
-      )
-    }
+  <section class="section">
+    <div class="wrap">
+      {cover && <img class="cover" src={cover} alt={`${title} screenshot`} />}
 
-    <div class="layout">
-      <aside class="facts panel">
-        <p class="mono file">$ cat meta.json</p>
-        <dl>
-          <div>
-            <dt>status</dt>
-            <dd><span class="status" data-status={status}>{status === "shipped" ? "SHIPPED" : "RUNNING"}</span></dd>
+      <div class="layout">
+        <article>
+          <span class="eyebrow">{domains.join(" / ")}</span>
+          <p class="lead-rule summary">{summary}</p>
+          <div class="prose">
+            <Content />
           </div>
-          <div>
-            <dt>stack</dt>
-            <dd class="tags">{stack.map((s) => <span class="tag">{s}</span>)}</dd>
-          </div>
+        </article>
+
+        <aside class="info">
+          <h3>Project <span class="green">info</span></h3>
+          <dl>
+            <div>
+              <dt>Status</dt>
+              <dd><span class="status" data-status={status}>{status === "shipped" ? "Shipped" : "In progress"}</span></dd>
+            </div>
+            <div>
+              <dt>Year</dt>
+              <dd>{year}</dd>
+            </div>
+            <div>
+              <dt>Stack</dt>
+              <dd class="tags">{stack.map((s) => <span class="tag">{s}</span>)}</dd>
+            </div>
+          </dl>
           {
             highlights.length > 0 && (
-              <div>
-                <dt>highlights</dt>
-                <dd>
-                  <ul>
-                    {highlights.map((h) => (
-                      <li>{h}</li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
+              <ul class="highlights">
+                {highlights.map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
             )
           }
-        </dl>
-        <div class="links">
-          <a class="btn" href={repo}>source</a>
-          {demo && <a class="btn primary" href={demo}>live_demo</a>}
-        </div>
-      </aside>
-
-      <div class="prose">
-        <Content />
+          <div class="links">
+            <a class="btn" href={repo}>Source code</a>
+            {demo && <a class="btn ghost" href={demo}>Live demo</a>}
+          </div>
+        </aside>
       </div>
-    </div>
 
-    <nav class="next panel" aria-label="Next project">
-      <span class="mono dim">$ next</span>
-      <a href={`/projects/${next.id}/`}>{next.data.title} →</a>
-    </nav>
-  </article>
+      <nav class="pager" aria-label="More projects">
+        <a href={`/projects/${prev.id}/`} class="prev">
+          <span>Previous</span>
+          {prev.data.title}
+        </a>
+        <a href={`/projects/${next.id}/`} class="next">
+          <span>Next</span>
+          {next.data.title}
+        </a>
+      </nav>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .head {
-    padding-block: clamp(40px, 7vw, 80px) 32px;
-    max-width: 860px;
-  }
-  .back {
-    display: inline-block;
-    margin-bottom: 28px;
-    text-decoration: none;
-    color: var(--ink-3);
-  }
-  .back::before {
-    content: "$ ";
-    color: var(--neon);
-  }
-  h1 {
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    margin-top: 12px;
-    letter-spacing: -0.035em;
-  }
-  .summary {
-    font-size: 1.05rem;
-    color: var(--ink-2);
-    margin: 18px 0 0;
-  }
   .cover {
-    margin: 0 0 40px;
-    overflow: hidden;
-  }
-  figcaption {
-    padding: 8px 14px;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink-3);
-  }
-  .cover img {
     width: 100%;
-    max-height: 520px;
+    max-height: 560px;
     object-fit: cover;
     object-position: top;
+    margin-bottom: clamp(40px, 6vw, 64px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
   }
   .layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 1fr 330px;
     gap: clamp(32px, 5vw, 64px);
     align-items: start;
   }
-  .facts {
-    position: sticky;
-    top: 82px;
-    display: grid;
-    gap: 20px;
-    padding: 18px;
+  .summary {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
   }
-  .file {
-    margin: 0;
-    color: var(--ink-3);
+  .info {
+    position: sticky;
+    top: 104px;
+    background: var(--card);
+    padding: 30px 28px;
+  }
+  .info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
   }
   dl {
+    margin: 0;
     display: grid;
     gap: 16px;
-    margin: 0;
   }
   dt {
-    color: var(--cyan);
-    font-size: 0.78rem;
-  }
-  dt::after {
-    content: ":";
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
   }
   dd {
-    margin: 6px 0 0;
+    margin: 4px 0 0;
+    color: #fff;
   }
   .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
-  dd ul {
-    margin: 0;
-    padding: 0;
+  .highlights {
     list-style: none;
+    margin: 24px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--line);
     display: grid;
-    gap: 6px;
-    font-size: 0.8rem;
-    color: var(--ink);
+    gap: 10px;
+    font-size: 0.9rem;
   }
-  dd li::before {
-    content: "▸ ";
-    color: var(--neon);
+  .highlights li {
+    position: relative;
+    padding-left: 20px;
+  }
+  .highlights li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 8px;
+    height: 8px;
+    background: var(--green);
   }
   .links {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    margin-top: 26px;
   }
-  .prose :global(> :first-child) {
-    margin-top: 0;
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: clamp(56px, 8vw, 96px);
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
   }
-  .next {
+  .pager a {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-block: clamp(56px, 9vw, 96px);
-    padding: 22px 24px;
-  }
-  .dim {
-    color: var(--ink-3);
-  }
-  .next a {
+    gap: 4px;
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 3vw, 1.9rem);
-    font-weight: 700;
-    text-decoration: none;
+    font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+    text-transform: uppercase;
+    color: #fff;
   }
-  @media (max-width: 860px) {
+  .pager a:hover {
+    color: var(--green);
+  }
+  .pager span {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--green);
+  }
+  .next {
+    text-align: right;
+    align-items: flex-end;
+  }
+  @media (max-width: 900px) {
     .layout {
       grid-template-columns: 1fr;
     }
-    .facts {
+    .info {
       position: static;
     }
   }

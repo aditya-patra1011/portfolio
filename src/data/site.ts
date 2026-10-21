@@ -7,6 +7,8 @@ export const site = {
   tagline:
     "I build machine-learning systems end to end, from messy public data to models I can explain and services that run. Lately that means satellites, Formula 1 and exoplanets.",
   location: "Pune, India",
+  // Optional portrait for the hero and about sections, e.g. "/me.jpg" in public/. Leave null for the monogram.
+  photo: null as string | null,
   education: {
     degree: "B.Tech, Computer Science & Engineering",
     school: "DY Patil International University, Pune",
@@ -14,7 +16,7 @@ export const site = {
   },
   now: {
     project: "orbitguard",
-    text: "Building OrbitGuard: screening 14k+ objects in orbit for close approaches, next up a collision-risk model.",
+    text: "Now building OrbitGuard: collision screening for 14k+ objects in orbit",
   },
   links: {
     github: "https://github.com/aditya-patra1011",
@@ -24,21 +26,66 @@ export const site = {
   },
 } as const;
 
-// TODO: prune to what you can defend in an interview; this is a first pass from the repos.
-export const skills: { group: string; items: string[] }[] = [
-  { group: "Languages", items: ["Python", "SQL", "Java", "C"] },
+// Shown as the career cards. Facts come from the résumé.
+export const experience = [
   {
-    group: "ML & data",
-    items: ["scikit-learn", "XGBoost", "PyTorch", "pandas", "NumPy", "SHAP", "statsmodels"],
+    period: "Jun 2026 – Aug 2026",
+    role: "ML & Data Intern",
+    org: "CloudExperts.co",
+    text: "Reviewed production code for a RAG web app on React/TypeScript and AWS Lambda; worked on stock market analysis.",
   },
-  { group: "Apps & serving", items: ["FastAPI", "Plotly Dash", "Streamlit", "Docker"] },
-  { group: "Data stores", items: ["MySQL", "PostgreSQL", "Parquet"] },
-  { group: "Practice", items: ["Git & GitHub Actions", "pytest", "Reproducible pipelines"] },
+  {
+    period: "2024 – 2028",
+    role: "B.Tech, CSE",
+    org: "DY Patil Intl. University",
+    text: "Computer Science & Engineering, currently in third year, based in Pune.",
+  },
+  {
+    period: "2023 – Present",
+    role: "Logistics & Organizing",
+    org: "Concordia Club",
+    text: "Ran logistics for 3+ university events, including Model UN, with 100+ participants.",
+  },
+  {
+    period: "2024",
+    role: "Certifications",
+    org: "Michigan · Rochester",
+    text: "Data Mining in Python (University of Michigan) and Technology Commercialization (University of Rochester).",
+  },
 ];
 
-// Early coursework projects: listed briefly on the About page, not as case studies.
-export const earlyWork = [
-  { name: "Bank Management System", stack: "Java, Swing", repo: "https://github.com/aditya-patra1011/Bank-System" },
-  { name: "Library Management System", stack: "Java", repo: "https://github.com/aditya-patra1011/Library-Management-System" },
-  { name: "Scientific Calculator", stack: "Java, Swing", repo: "https://github.com/aditya-patra1011/Scientific-Calculator-" },
+// Headline numbers for the stat rings; every value comes from a project README.
+export const stats = [
+  { value: "14K+", label: "Objects screened", note: "OrbitGuard" },
+  { value: "23", label: "F1 circuits modelled", note: "BoxBox" },
+  { value: "9.5K", label: "Kepler objects classified", note: "Kepler" },
+  { value: "0.99", label: "ROC-AUC, held-out set", note: "Kepler" },
+];
+
+export const services = [
+  {
+    icon: "ml",
+    title: "ML Engineering",
+    text: "Models that go past the notebook: validated, explained with SHAP, tested, and packaged so someone else can run them.",
+  },
+  {
+    icon: "stats",
+    title: "Data & Statistics",
+    text: "Cleaning, feature engineering, hypothesis tests and survival analysis, with splits that don't leak and checks on where accuracy comes from.",
+  },
+  {
+    icon: "dash",
+    title: "Dashboards & Apps",
+    text: "Interactive Plotly Dash and Streamlit apps that turn a model's output into something people can explore.",
+  },
+];
+
+export const skills: { group: string; items: string[] }[] = [
+  { group: "Languages", items: ["Python", "SQL (MySQL)", "Java", "C"] },
+  {
+    group: "ML & data",
+    items: ["scikit-learn", "XGBoost", "TensorFlow/Keras", "SHAP", "pandas", "NumPy", "SciPy", "lifelines"],
+  },
+  { group: "Apps & viz", items: ["Plotly Dash", "Streamlit", "Plotly", "Matplotlib", "Seaborn"] },
+  { group: "Engineering", items: ["Git & GitHub", "pytest", "Jupyter", "MySQL Workbench"] },
 ];

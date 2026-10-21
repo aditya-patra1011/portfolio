@@ -1,461 +1,659 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHead from "../components/SectionHead.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import ProjectRow from "../components/ProjectRow.astro";
-import { getProjects, byTier } from "../lib/projects";
-import { site, skills } from "../data/site";
+import { getProjects } from "../lib/projects";
+import { site, experience, stats, services, skills } from "../data/site";
 
 const projects = await getProjects();
-const flagship = byTier(projects, "flagship");
-const featured = byTier(projects, "featured");
-const more = byTier(projects, "more");
-
-const shipped = projects.filter((p) => p.data.status === "shipped").length;
-const ticker = projects.flatMap((p) => p.data.highlights.map((h) => ({ id: p.id, text: h })));
+const showcase = projects.filter((p) => p.data.tier !== "more").slice(0, 6);
+const initials = "AP";
 ---
 
 <BaseLayout>
-  <section class="hero wrap">
-    <div class="intro">
-      <p class="boot mono">
-        <span class="neon">[ OK ]</span> session started · {site.location.toLowerCase()} · {projects.length} projects loaded
-      </p>
-      <h1 class="name">
-        <span class="glitch" data-text="ADITYA">ADITYA</span><br />
-        <span class="glitch neon-text" data-text="PATRA">PATRA</span>
-      </h1>
-      <p class="role">&gt; {site.role.toLowerCase()}<span class="caret" aria-hidden="true"></span></p>
-      <p class="tagline">{site.tagline}</p>
-      <div class="cta">
-        <a class="btn primary" href="/projects/">view_projects</a>
-        <a class="btn" href={site.links.github}>github</a>
-      </div>
-    </div>
-
-    <div class="term panel" data-term>
-      <div class="term-bar">
-        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="mono">aditya@portfolio: ~</span>
-        <span class="mono live">● live</span>
-      </div>
-      <div class="term-body">
-        <p class="cmd"><span class="ps">$</span> <span data-type>whoami</span></p>
-        <p class="out">{site.name} <span class="dim">// {site.education.degree.split(",")[0]}, {site.education.note}</span></p>
-        <p class="cmd"><span class="ps">$</span> <span data-type>cat mission.txt</span></p>
-        <p class="out">Turning public data into ML systems you can actually inspect.</p>
-        <p class="cmd"><span class="ps">$</span> <span data-type>ls ~/projects --flagship</span></p>
-        <p class="out">{flagship.map((p) => <a class="dir" href={`/projects/${p.id}/`}>{p.id}/</a>)}</p>
-        <p class="cmd"><span class="ps">$</span> <span data-type>./status --now</span></p>
-        <p class="out">
-          <span class="warn">[RUNNING]</span>
-          <a href={`/projects/${site.now.project}/`}>{site.now.text}</a>
-        </p>
-        <p class="out stats">
-          <span><b>{projects.length}</b> projects</span>
-          <span><b>{shipped}</b> shipped</span>
-          <span><b>{projects.length - shipped}</b> in progress</span>
-        </p>
-        <p class="cmd last"><span class="ps">$</span> <span class="caret" aria-hidden="true"></span></p>
-      </div>
-    </div>
-  </section>
-
-  {
-    ticker.length > 0 && (
-      <div class="ticker" aria-label="Project highlights">
-        <div class="track">
-          {[0, 1].map((copy) => (
-            <ul aria-hidden={copy === 1 ? "true" : undefined}>
-              {ticker.map((t) => (
-                <li>
-                  <span class="neon">[{t.id}]</span> {t.text}
-                </li>
-              ))}
-            </ul>
-          ))}
+  <!-- HERO -->
+  <section class="hero">
+    <div class="contours" aria-hidden="true"></div>
+    <div class="columns" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy" data-reveal>
+        <span class="eyebrow">Hello, I'm {site.name}</span>
+        <h1><span class="green">Building</span> ML systems you can actually inspect</h1>
+        <p class="lead-rule">{site.tagline}</p>
+        <div class="actions">
+          <a class="btn" href="/projects/">View projects</a>
+          <a class="btn ghost" href={site.links.resume}>Download CV</a>
         </div>
       </div>
-    )
-  }
 
-  <section class="section wrap" id="work">
-    <div class="section-head">
-      <h2><span class="idx">01</span>flagship_work</h2>
-      <a href="/projects/">ls -a →</a>
-    </div>
-    <div class="flagship">
-      {flagship.map((p) => <ProjectCard project={p} size="large" />)}
-    </div>
-  </section>
-
-  <section class="wrap">
-    <div class="section-head">
-      <h2><span class="idx">02</span>featured</h2>
-    </div>
-    <div class="grid">
-      {featured.map((p) => <ProjectCard project={p} />)}
-    </div>
-  </section>
-
-  {
-    more.length > 0 && (
-      <section class="section wrap">
-        <div class="section-head">
-          <h2>
-            <span class="idx">03</span>more_projects
-          </h2>
-        </div>
-        <ul class="list panel">
-          {more.map((p) => (
-            <ProjectRow project={p} />
-          ))}
-        </ul>
-      </section>
-    )
-  }
-
-  <section class="wrap">
-    <div class="section-head">
-      <h2><span class="idx">04</span>toolkit</h2>
-      <a href="/about/">cat about.md →</a>
-    </div>
-    <div class="config panel">
-      <p class="mono file"># ~/.config/stack.yml</p>
-      <dl>
+      <div class="portrait" data-reveal>
+        <div class="blob" aria-hidden="true"></div>
         {
-          skills.map((s) => (
-            <div class="kv">
-              <dt>{s.group.toLowerCase().replace(/[^a-z]+/g, "_")}:</dt>
-              <dd>
-                [{s.items.map((it, i) => (
-                  <>
-                    <span class="val">{it}</span>
-                    {i < s.items.length - 1 && ", "}
-                  </>
-                ))}]
-              </dd>
+          site.photo ? (
+            <img src={site.photo} alt={site.name} class="photo" />
+          ) : (
+            <div class="mono" aria-hidden="true">
+              <svg viewBox="0 0 400 400" class="orbit">
+                <circle cx="200" cy="200" r="150" />
+                <ellipse cx="200" cy="200" rx="190" ry="70" transform="rotate(-24 200 200)" />
+                <ellipse cx="200" cy="200" rx="185" ry="95" transform="rotate(30 200 200)" />
+                <circle class="sat" cx="372" cy="130" r="7" />
+                <circle class="sat" cx="40" cy="268" r="5" />
+              </svg>
+              <span>{initials}</span>
+            </div>
+          )
+        }
+        <div class="chip">
+          <span class="status" data-status="in-progress">Now</span>
+          <a href={`/projects/${site.now.project}/`}>OrbitGuard</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="wrap about-grid">
+      <div class="profile" data-reveal>
+        <div class="dots" aria-hidden="true"></div>
+        <div class="profile-card">
+          <div class="avatar">
+            {site.photo ? <img src={site.photo} alt="" /> : <span>{initials}</span>}
+          </div>
+          <dl>
+            <div><dt>Name</dt><dd>{site.name}</dd></div>
+            <div><dt>Based in</dt><dd>{site.location}</dd></div>
+            <div><dt>Studying</dt><dd>{site.education.degree}</dd></div>
+            <div><dt>Email</dt><dd><a href={`mailto:${site.links.email}`}>{site.links.email}</a></dd></div>
+          </dl>
+        </div>
+      </div>
+      <div>
+        <SectionHead eyebrow="About me" ghost="About me" title="Curious data, honest models, real results" accent="real results" />
+        <div class="about-text" data-reveal>
+          <p>
+            I'm a {site.education.note} Computer Science student at {site.education.school}. I like projects where
+            the data is real and messy and the question is concrete: which tyre should this driver pit for, which
+            Kepler signals are actually planets, which two satellites are about to get too close.
+          </p>
+          <p>
+            I care about the parts of ML that are easy to skip: validation splits that don't leak, checking where a
+            model's accuracy really comes from, and packaging the result so someone else can run it.
+          </p>
+          <a class="btn" href={site.links.resume}>Download CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAREER -->
+  <section class="section alt" id="career">
+    <div class="contours" aria-hidden="true"></div>
+    <div class="wrap">
+      <SectionHead
+        eyebrow="My experience"
+        ghost="Career"
+        title="Experience and skill"
+        accent="skill"
+        intro="Study, an internship and the work around it. Most of my experience so far is in the projects below."
+      />
+      <div class="jobs">
+        {
+          experience.map((e) => (
+            <article class="job" data-reveal>
+              <span class="period">{e.period}</span>
+              <h3>{e.org}</h3>
+              <p class="role">{e.role}</p>
+              <p>{e.text}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="rings">
+        {
+          stats.map((s) => (
+            <div class="ring" data-reveal>
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="track" cx="60" cy="60" r="52" />
+                <circle class="bar" cx="60" cy="60" r="52" />
+              </svg>
+              <span class="value">{s.value}</span>
+              <h3>{s.label}</h3>
+              <span class="note">{s.note}</span>
             </div>
           ))
         }
-      </dl>
+      </div>
+
+      <div class="toolkit" data-reveal>
+        {
+          skills.map((s) => (
+            <div>
+              <h4>{s.group}</h4>
+              <p>{s.items.join(" · ")}</p>
+            </div>
+          ))
+        }
+      </div>
     </div>
   </section>
 
-  <section class="section wrap">
-    <div class="contact panel">
-      <p class="eyebrow">open to work</p>
-      <h2>Looking for an ML / data internship or graduate role.</h2>
-      <p class="sub">The fastest way to reach me is email. I usually reply within a day.</p>
-      <a class="btn primary" href={`mailto:${site.links.email}`}>{site.links.email}</a>
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <SectionHead
+        eyebrow="What I do"
+        ghost="Services"
+        title="What I bring to a team"
+        accent="team"
+        intro="Three things I'm good at and want to keep getting better at."
+      />
+      <div class="services">
+        {
+          services.map((s, i) => (
+            <article class:list={["service", { featured: i === 1 }]} data-reveal>
+              <div class="icon" aria-hidden="true">
+                {s.icon === "ml" && (
+                  <svg viewBox="0 0 64 64">
+                    <circle cx="16" cy="16" r="6" /><circle cx="16" cy="48" r="6" /><circle cx="48" cy="32" r="8" />
+                    <path d="M22 18l18 11M22 46l18-11M16 22v20" />
+                  </svg>
+                )}
+                {s.icon === "stats" && (
+                  <svg viewBox="0 0 64 64">
+                    <path d="M8 54h48" /><rect x="12" y="34" width="8" height="20" /><rect x="28" y="22" width="8" height="32" /><rect x="44" y="12" width="8" height="42" />
+                    <path d="M10 28c10-2 18-10 26-14s14-6 20-6" />
+                  </svg>
+                )}
+                {s.icon === "dash" && (
+                  <svg viewBox="0 0 64 64">
+                    <rect x="6" y="10" width="52" height="38" rx="2" /><path d="M24 56h16M32 48v8" /><path d="M14 38l9-10 7 6 12-14 8 6" />
+                  </svg>
+                )}
+              </div>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="section alt" id="portfolio">
+    <div class="columns" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <SectionHead
+        eyebrow="Portfolio"
+        ghost="Projects"
+        title="Latest working projects"
+        accent="projects"
+        intro="Each project has a write-up covering the problem, the data, what I tried, and what I'd change."
+      />
+      <div class="grid">
+        {showcase.map((p) => <ProjectCard project={p} />)}
+      </div>
+      <div class="more" data-reveal>
+        <a class="btn" href="/projects/">View all {projects.length} projects</a>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
-<script>
-  // Type out each command in the hero terminal, revealing outputs between them.
-  const term = document.querySelector<HTMLElement>("[data-term]");
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (term && !reduce) {
-    const lines = [...term.querySelectorAll<HTMLElement>(".term-body > p")];
-    const typed = new Map<HTMLElement, string>();
-    lines.forEach((l) => {
-      const target = l.querySelector<HTMLElement>("[data-type]");
-      if (target) {
-        typed.set(target, target.textContent ?? "");
-        target.textContent = "";
-      }
-      l.style.visibility = "hidden";
-    });
-    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    (async () => {
-      await wait(350);
-      for (const l of lines) {
-        l.style.visibility = "visible";
-        const target = l.querySelector<HTMLElement>("[data-type]");
-        if (target) {
-          const text = typed.get(target)!;
-          for (let i = 1; i <= text.length; i++) {
-            target.textContent = text.slice(0, i);
-            await wait(18 + Math.random() * 30);
-          }
-          await wait(180);
-        } else {
-          await wait(90);
-        }
-      }
-    })();
-  }
-</script>
-
 <style>
+  /* hero */
   .hero {
-    display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: clamp(32px, 5vw, 64px);
-    align-items: center;
-    padding-block: clamp(56px, 10vw, 120px) clamp(40px, 6vw, 72px);
-  }
-  .boot {
-    color: var(--ink-3);
-    margin: 0 0 20px;
-  }
-  .name {
-    font-size: clamp(3.2rem, 9vw, 6.6rem);
-    line-height: 0.92;
-    letter-spacing: -0.04em;
-  }
-  .neon-text {
-    color: var(--neon);
-    text-shadow:
-      0 0 10px rgba(var(--neon-rgb), 0.6),
-      0 0 40px rgba(var(--neon-rgb), 0.3);
-  }
-  .glitch {
     position: relative;
-    display: inline-block;
+    margin-top: -84px; /* sit under the transparent header */
+    padding-top: 84px;
+    min-height: min(92vh, 860px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
   }
-  .glitch::before,
-  .glitch::after {
-    content: attr(data-text);
+  .columns {
     position: absolute;
     inset: 0;
-    opacity: 0;
+    display: flex;
+    justify-content: space-evenly;
     pointer-events: none;
   }
-  .glitch::before {
-    color: var(--cyan);
-    text-shadow: none;
+  .columns i {
+    width: 1px;
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.05) 80%, transparent);
   }
-  .glitch::after {
-    color: #ff3d7f;
-    text-shadow: none;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .glitch::before {
-      animation: glitch-a 7s infinite steps(1);
-    }
-    .glitch::after {
-      animation: glitch-b 7s infinite steps(1);
-    }
-    @keyframes glitch-a {
-      0%, 91%, 100% { opacity: 0; transform: none; clip-path: none; }
-      92% { opacity: 0.8; transform: translate(-3px, 1px); clip-path: inset(10% 0 55% 0); }
-      94% { opacity: 0.8; transform: translate(3px, -1px); clip-path: inset(60% 0 8% 0); }
-      96% { opacity: 0.6; transform: translate(-2px, 0); clip-path: inset(35% 0 40% 0); }
-    }
-    @keyframes glitch-b {
-      0%, 91%, 100% { opacity: 0; transform: none; clip-path: none; }
-      93% { opacity: 0.7; transform: translate(3px, 0); clip-path: inset(50% 0 20% 0); }
-      95% { opacity: 0.7; transform: translate(-3px, 1px); clip-path: inset(5% 0 70% 0); }
-    }
-  }
-  .role {
-    margin: 22px 0 0;
-    font-size: clamp(1rem, 2vw, 1.15rem);
-    color: var(--neon);
-  }
-  .tagline {
-    max-width: 52ch;
-    color: var(--ink-2);
-    margin: 14px 0 0;
-  }
-  .cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 30px;
-  }
-
-  /* terminal */
-  .term {
-    font-size: 0.86rem;
-    box-shadow:
-      0 0 0 1px rgba(var(--neon-rgb), 0.05),
-      0 30px 80px rgba(0, 0, 0, 0.6),
-      0 0 60px rgba(var(--neon-rgb), 0.06);
-  }
-  .term-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink-3);
-  }
-  .lights {
-    display: flex;
-    gap: 6px;
-  }
-  .lights i {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    border: 1px solid var(--line-2);
-  }
-  .lights i:first-child {
-    background: var(--neon);
-    border-color: var(--neon);
-    box-shadow: 0 0 8px var(--neon);
-  }
-  .live {
-    margin-left: auto;
-    color: var(--neon);
-  }
-  .term-body {
-    padding: 18px 18px 20px;
-    min-height: 340px;
-  }
-  .term-body p {
-    margin: 0;
-  }
-  .cmd {
-    color: var(--ink);
-    margin-top: 10px !important;
-  }
-  .cmd:first-child {
-    margin-top: 0 !important;
-  }
-  .ps {
-    color: var(--neon);
-    text-shadow: var(--glow);
-  }
-  .out {
-    color: var(--ink-2);
-  }
-  .out a {
-    text-decoration: none;
-  }
-  .dim {
-    color: var(--ink-3);
-  }
-  .dir {
-    color: var(--cyan);
-    margin-right: 14px;
-  }
-  .warn {
-    color: var(--amber);
-  }
-  .stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 18px;
-    margin-top: 6px !important;
-    color: var(--ink-3);
-  }
-  .stats b {
-    color: var(--neon);
-    font-weight: 600;
-  }
-
-  /* highlights ticker */
-  .ticker {
+  .hero-grid {
     position: relative;
-    overflow: hidden;
-    border-block: 1px solid var(--line);
-    background: rgba(3, 8, 5, 0.75);
-    font-size: 0.8rem;
-    color: var(--ink-2);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 40px;
+    align-items: center;
+    padding-block: 60px;
   }
-  .track {
-    display: flex;
-    width: max-content;
+  h1 {
+    font-size: clamp(2.8rem, 6.4vw, 5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    margin: 6px 0 30px;
   }
-  .ticker ul {
+  .hero-copy .lead-rule {
+    max-width: 50ch;
+  }
+  .actions {
     display: flex;
-    gap: 48px;
-    list-style: none;
-    margin: 0;
-    padding: 12px 24px;
-    white-space: nowrap;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 36px;
+  }
+
+  .portrait {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 440px);
+    aspect-ratio: 1;
+  }
+  .blob {
+    position: absolute;
+    inset: 8% 6% 4% 10%;
+    border-radius: 58% 42% 50% 50% / 50% 55% 45% 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(var(--green-rgb), 0.35), rgba(var(--green-rgb), 0.08) 70%);
+    filter: blur(2px);
+  }
+  .photo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .mono {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+  }
+  .orbit {
+    position: absolute;
+    inset: 0;
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.14);
+    stroke-width: 1.2;
+  }
+  .orbit circle:first-child {
+    fill: #141a1b;
+    stroke: var(--green);
+    stroke-width: 2;
+  }
+  .orbit .sat {
+    fill: var(--green);
+    stroke: none;
   }
   @media (prefers-reduced-motion: no-preference) {
-    .track {
-      animation: marquee 60s linear infinite;
+    .orbit {
+      animation: spin 60s linear infinite;
     }
-    .ticker:hover .track {
-      animation-play-state: paused;
-    }
-    @keyframes marquee {
+    @keyframes spin {
       to {
-        transform: translateX(-50%);
+        transform: rotate(360deg);
       }
     }
   }
+  .mono span {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 12vw, 8rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+  .chip {
+    position: absolute;
+    right: 0;
+    bottom: 12%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: var(--card);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: #fff;
+  }
 
-  .flagship {
+  /* about */
+  .about-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
-    gap: 20px;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(40px, 7vw, 90px);
+    align-items: center;
+  }
+  .profile {
+    position: relative;
+  }
+  .dots {
+    position: absolute;
+    left: -36px;
+    bottom: -36px;
+    width: 180px;
+    height: 180px;
+    background-image: radial-gradient(var(--green) 1.6px, transparent 1.8px);
+    background-size: 18px 18px;
+    opacity: 0.7;
+  }
+  .profile-card {
+    position: relative;
+    background: var(--card);
+    padding: clamp(24px, 4vw, 40px);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .profile-card::before {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -90px;
+    top: -90px;
+    border-radius: 50%;
+    background: rgba(var(--green-rgb), 0.14);
+  }
+  .avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-bottom: 26px;
+    overflow: hidden;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .avatar span {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .profile-card dl {
+    position: relative;
+    margin: 0;
+    display: grid;
+    gap: 14px;
+  }
+  .profile-card dt {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--green);
+  }
+  .profile-card dd {
+    margin: 0;
+    color: #fff;
+    word-break: break-word;
+  }
+  .about-text p {
+    margin: 0 0 18px;
+  }
+  .about-text .btn {
+    margin-top: 12px;
+  }
+
+  /* career */
+  .section > .contours {
+    opacity: 0.35;
+  }
+  .jobs {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .job {
+    background: var(--card);
+    padding: 28px 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s;
+  }
+  .job:hover {
+    transform: translateY(-6px);
+  }
+  .period {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .job h3 {
+    font-size: 1.3rem;
+    color: var(--green);
+    margin: 12px 0 2px;
+  }
+  .role {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .job p:last-child {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .rings {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: clamp(56px, 8vw, 90px);
+    text-align: center;
+  }
+  .ring {
+    position: relative;
+    display: grid;
+    justify-items: center;
+  }
+  .ring svg {
+    width: 150px;
+    height: 150px;
+    transform: rotate(-90deg);
+  }
+  .ring circle {
+    fill: none;
+    stroke-width: 9;
+  }
+  .track {
+    stroke: #fff;
+  }
+  .bar {
+    stroke: var(--green);
+    stroke-linecap: butt;
+    stroke-dasharray: 327;
+    stroke-dashoffset: 82; /* three-quarter green ring, like the template */
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .js .ring .bar {
+      stroke-dashoffset: 327;
+      transition: stroke-dashoffset 1.4s ease 0.2s;
+    }
+    .js .ring.in .bar {
+      stroke-dashoffset: 82;
+    }
+  }
+  .value {
+    position: absolute;
+    top: 0;
+    height: 150px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .ring h3 {
+    font-size: 1.15rem;
+    margin-top: 18px;
+  }
+  .note {
+    font-size: 0.8rem;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .toolkit {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: clamp(56px, 8vw, 80px);
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+  .toolkit h4 {
+    font-size: 1rem;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .toolkit p {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  /* services */
+  .services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .service {
+    position: relative;
+    overflow: hidden;
+    background: var(--card);
+    padding: 48px 34px;
+    text-align: center;
+    transition:
+      background 0.3s,
+      transform 0.3s;
+  }
+  .service:hover {
+    transform: translateY(-6px);
+  }
+  .service.featured {
+    background: var(--green);
+  }
+  .service.featured::after {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -80px;
+    bottom: -110px;
+    border-radius: 50%;
+    border: 40px solid rgba(255, 255, 255, 0.07);
+  }
+  .icon svg {
+    width: 64px;
+    height: 64px;
+    fill: rgba(var(--green-rgb), 0.25);
+    stroke: var(--green);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .featured .icon svg {
+    fill: rgba(255, 255, 255, 0.2);
+    stroke: #fff;
+  }
+  .service h3 {
+    font-size: 1.45rem;
+    color: var(--green);
+    margin: 22px 0 14px;
+  }
+  .featured h3 {
+    color: #fff;
+  }
+  .service p {
+    margin: 0;
+    font-size: 0.93rem;
+  }
+  .featured p {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* portfolio */
+  #portfolio {
+    overflow: hidden;
   }
   .grid {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
   }
-  .list {
-    list-style: none;
-    margin: 0;
-    padding: 4px 20px;
+  .more {
+    position: relative;
+    margin-top: 48px;
+    text-align: center;
   }
 
-  .config {
-    padding: 22px 24px;
+  @media (max-width: 1024px) {
+    .jobs,
+    .rings,
+    .toolkit {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-  .file {
-    color: var(--ink-3);
-    margin: 0 0 14px;
-  }
-  .config dl {
-    margin: 0;
-    display: grid;
-    gap: 8px;
-  }
-  .kv {
-    display: grid;
-    grid-template-columns: 170px 1fr;
-    gap: 12px;
-  }
-  dt {
-    color: var(--cyan);
-  }
-  dd {
-    margin: 0;
-    color: var(--ink-3);
-  }
-  .val {
-    color: var(--ink);
-  }
-
-  .contact {
-    padding: clamp(28px, 5vw, 56px);
-    text-align: left;
-    background:
-      linear-gradient(135deg, rgba(var(--neon-rgb), 0.08), transparent 55%),
-      var(--panel);
-  }
-  .contact h2 {
-    font-size: clamp(1.6rem, 4vw, 2.6rem);
-    max-width: 22ch;
-    margin-top: 10px;
-  }
-  .contact .sub {
-    color: var(--ink-2);
-    margin: 14px 0 26px;
-  }
-
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .hero {
+      margin-top: -70px;
+      padding-top: 70px;
+    }
+  }
+  @media (max-width: 860px) {
+    .hero-grid,
+    .about-grid {
       grid-template-columns: 1fr;
     }
-    .term-body {
-      min-height: 0;
+    .portrait {
+      width: min(80%, 360px);
+    }
+    .services {
+      grid-template-columns: 1fr;
     }
   }
   @media (max-width: 560px) {
-    .kv {
+    .jobs,
+    .toolkit,
+    .grid {
       grid-template-columns: 1fr;
-      gap: 0;
+    }
+    .rings {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .ring svg {
+      width: 120px;
+      height: 120px;
+    }
+    .value {
+      height: 120px;
+      font-size: 1.7rem;
+    }
+    .dots {
+      left: -12px;
     }
   }
 </style>
