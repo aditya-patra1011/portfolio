@@ -1,51 +1,111 @@
 ---
 import { site } from "../data/site";
 const year = new Date().getFullYear();
+const prefix = Astro.url.pathname === "/" ? "" : "/";
 ---
 
+<section class="cta" id="contact">
+  <div class="wrap inner">
+    <div>
+      <span class="eyebrow light">Open to work</span>
+      <h2>Looking for an ML / data internship or graduate role</h2>
+    </div>
+    <a class="mail" href={`mailto:${site.links.email}`}>
+      <span>{site.links.email}</span>
+      <span class="go" aria-hidden="true">Say hello</span>
+    </a>
+  </div>
+</section>
+
 <footer class="footer">
-  <div class="wrap row">
-    <p class="mono">
-      <span class="ok">[ok]</span> © {year} {site.name} · {site.location} · built with Astro
-    </p>
-    <ul>
-      <li><a href={site.links.github}>github</a></li>
-      <li><a href={site.links.linkedin}>linkedin</a></li>
-      <li><a href={`mailto:${site.links.email}`}>email</a></li>
+  <div class="wrap">
+    <ul class="links">
+      <li><a href={`${prefix}#about`}>About me</a></li>
+      <li><a href={`${prefix}#career`}>Career</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href={site.links.resume}>Résumé</a></li>
+      <li><a href={site.links.github}>GitHub</a></li>
+      <li><a href={site.links.linkedin}>LinkedIn</a></li>
     </ul>
+    <p>Copyright © {year} {site.name} · {site.location}</p>
   </div>
 </footer>
 
 <style>
-  .footer {
-    border-top: 1px solid var(--line);
-    background: rgba(3, 6, 4, 0.7);
-    padding-block: 24px;
-    color: var(--ink-3);
+  .cta {
+    background: var(--green);
+    color: #fff;
   }
-  .row {
+  .inner {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 24px;
     align-items: center;
     justify-content: space-between;
+    gap: 24px 40px;
+    padding-block: 52px;
   }
-  p {
-    margin: 0;
+  .eyebrow.light {
+    color: rgba(255, 255, 255, 0.8);
   }
-  .ok {
-    color: var(--neon);
+  h2 {
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+    max-width: 22ch;
   }
-  ul {
+  .mail {
     display: flex;
-    gap: 20px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.82rem;
+    align-items: stretch;
+    background: #fff;
+    border-radius: 2px;
+    overflow: hidden;
+    max-width: 100%;
   }
-  a {
-    color: var(--ink-2);
-    text-decoration: none;
+  .mail span:first-child {
+    padding: 16px 22px;
+    color: #4b5455;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .go {
+    display: flex;
+    align-items: center;
+    padding-inline: 22px;
+    background: #111516;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .mail:hover .go {
+    background: #000;
+  }
+  .footer {
+    background: #0a0c0d;
+    padding-block: 40px;
+    text-align: center;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 32px;
+    list-style: none;
+    margin: 0 0 14px;
+    padding: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .footer p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  @media (max-width: 560px) {
+    .go {
+      display: none;
+    }
   }
 </style>

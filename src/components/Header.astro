@@ -1,86 +1,316 @@
 ---
 import { site } from "../data/site";
 
+const onHome = Astro.url.pathname === "/";
+// On the home page the links scroll to sections; elsewhere they jump back to them.
+const prefix = onHome ? "" : "/";
 const nav = [
-  { href: "/projects/", label: "projects" },
-  { href: "/about/", label: "about" },
-  { href: `mailto:${site.links.email}`, label: "contact" },
+  { href: `${prefix}#top`, label: "Home" },
+  { href: `${prefix}#about`, label: "About" },
+  { href: `${prefix}#career`, label: "Career" },
+  { href: `${prefix}#services`, label: "Services" },
+  { href: "/projects/", label: "Portfolio" },
 ];
 const path = Astro.url.pathname;
 ---
 
+<div class="topbar" id="top">
+  <div class="wrap row">
+    <a class="news" href={`/projects/${site.now.project}/`}>
+      <span class="badge" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"></path></svg>
+      </span>
+      <span class="text">{site.now.text}</span>
+    </a>
+    <div class="right">
+      <a href={site.links.github} aria-label="GitHub" class="social">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"></path></svg>
+      </a>
+      <a href={site.links.linkedin} aria-label="LinkedIn" class="social">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21H9z"></path></svg>
+      </a>
+      <a href={`mailto:${site.links.email}`} aria-label="Email" class="social">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"></rect><path d="M3 6l9 7 9-7"></path></svg>
+      </a>
+      <a class="contact" href={`mailto:${site.links.email}`}>» Contact Me</a>
+    </div>
+  </div>
+</div>
+
 <header class="header">
   <div class="wrap bar">
-    <a href="/" class="brand" aria-label="Home">
-      <span class="prompt">~/</span>aditya<span class="long">_patra</span><span class="caret" aria-hidden="true"></span>
+    <a href="/" class="logo" aria-label="Home">
+      <span class="mark" aria-hidden="true">
+        <i></i><i></i><b>A</b>
+      </span>
+      <span class="word">Aditya<span class="green">.</span></span>
     </a>
-    <nav aria-label="Main">
+
+    <nav id="menu" aria-label="Main">
       {
         nav.map((item) => (
-          <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
-            <span class="dot">./</span>
+          <a href={item.href} aria-current={item.href === "/projects/" && path.startsWith("/projects") ? "page" : undefined}>
             {item.label}
           </a>
         ))
       }
     </nav>
+
+    <a class="cv" href={site.links.resume}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"></path></svg>
+      Résumé
+    </a>
+
+    <button class="dots" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+      {Array.from({ length: 9 }, () => <i></i>)}
+    </button>
   </div>
 </header>
 
+<script>
+  const header = document.querySelector<HTMLElement>(".header")!;
+  const btn = header.querySelector<HTMLButtonElement>(".dots")!;
+  btn.addEventListener("click", () => {
+    const open = header.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  header.querySelectorAll("nav a").forEach((a) =>
+    a.addEventListener("click", () => {
+      header.classList.remove("open");
+      btn.setAttribute("aria-expanded", "false");
+    }),
+  );
+  const onScroll = () => header.classList.toggle("stuck", window.scrollY > 46);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+</script>
+
 <style>
+  .topbar {
+    background: #273032;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #fff;
+  }
+  .row {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    height: 46px;
+  }
+  .news {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    text-transform: uppercase;
+  }
+  .badge {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex: none;
+    background: var(--green);
+  }
+  .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .right {
+    display: flex;
+    align-items: stretch;
+  }
+  .social {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .contact {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    padding-inline: 22px;
+    background: var(--green);
+    white-space: nowrap;
+  }
+  .contact:hover {
+    color: #fff;
+    background: var(--green-dark);
+  }
+
   .header {
     position: sticky;
     top: 0;
-    z-index: 10;
-    background: rgba(3, 6, 4, 0.78);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
+    z-index: 30;
+    background: transparent;
+    transition:
+      background 0.3s,
+      box-shadow 0.3s;
+  }
+  .header.stuck {
+    background: rgba(10, 12, 13, 0.96);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
   .bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 58px;
-    gap: 16px;
+    gap: 24px;
+    height: 84px;
   }
-  .brand {
-    font-weight: 700;
-    font-size: 0.95rem;
-    text-decoration: none;
-    white-space: nowrap;
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
   }
-  .prompt {
-    color: var(--neon);
-    text-shadow: var(--glow);
+  .mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 5px rgba(var(--green-rgb), 0.25);
   }
-  .brand .caret {
-    width: 0.55em;
-    height: 1em;
+  .mark b {
+    font-size: 1.15rem;
+    color: #fff;
+  }
+  .mark i {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .mark i:first-child {
+    width: 9px;
+    height: 9px;
+    left: -9px;
+    top: 2px;
+  }
+  .mark i:nth-child(2) {
+    width: 5px;
+    height: 5px;
+    left: -1px;
+    top: -6px;
   }
   nav {
     display: flex;
-    align-items: center;
-    gap: clamp(12px, 3vw, 28px);
-    font-size: 0.85rem;
+    gap: 34px;
+    margin-left: auto;
   }
   nav a {
-    text-decoration: none;
-    color: var(--ink-2);
+    position: relative;
+    padding-block: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #d7dddd;
   }
-  .dot {
-    color: var(--ink-3);
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: -12px;
+    right: -12px;
+    bottom: 0;
+    height: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transition: transform 0.25s;
   }
-  nav a[aria-current="page"] {
-    color: var(--neon);
-    text-shadow: var(--glow);
+  nav a:hover::after,
+  nav a[aria-current="page"]::after {
+    transform: scaleX(1);
   }
-  nav a[aria-current="page"] .dot {
-    color: var(--neon-dim);
+  .cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 22px;
+    font-size: 0.9rem;
+    color: var(--green);
   }
-  @media (max-width: 520px) {
-    .long,
-    .dot {
+  .cv:hover {
+    color: #fff;
+  }
+  .dots {
+    display: grid;
+    grid-template-columns: repeat(3, 5px);
+    gap: 4px;
+    padding: 6px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .dots i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    transition: transform 0.2s;
+  }
+  .dots:hover i:nth-child(odd) {
+    transform: scale(1.4);
+  }
+
+  @media (min-width: 961px) {
+    .dots {
       display: none;
+    }
+  }
+  @media (max-width: 960px) {
+    .bar {
+      height: 70px;
+    }
+    .cv {
+      margin-left: auto;
+    }
+    nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      margin: 0;
+      padding: 8px var(--gutter) 16px;
+      background: rgba(10, 12, 13, 0.98);
+      border-top: 1px solid var(--line);
+      display: none;
+    }
+    .header.open nav {
+      display: flex;
+    }
+    .header.open {
+      background: rgba(10, 12, 13, 0.98);
+    }
+    nav a {
+      padding-block: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    nav a::after {
+      display: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .social {
+      display: none;
+    }
+    .contact {
+      margin-left: 8px;
+      padding-inline: 14px;
+    }
+    .cv {
+      font-size: 0;
+      gap: 0;
     }
   }
 </style>
