@@ -1,33 +1,35 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageBanner from "../components/PageBanner.astro";
+import TempleBanner from "../components/TempleBanner.astro";
 ---
 
-<BaseLayout title="Not found">
-  <PageBanner title="Page not found" crumbs={[{ label: "Home", href: "/" }, { label: "404" }]} />
-  <section class="section">
-    <div class="wrap center">
-      <p class="big" aria-hidden="true">404</p>
-      <p>That page doesn't exist, or it moved.</p>
-      <a class="btn" href="/">Back home</a>
-    </div>
+<BaseLayout title="Lost at sea">
+  <TempleBanner title="Lost at sea" greek="ΠΛΑΝΗ" />
+  <section class="lost">
+    <p class="big" aria-hidden="true">CDIV</p>
+    <p>That page isn't in this temple. Even Odysseus took ten years to find his way home; you only need one click.</p>
+    <a class="btn" href="/">Sail back home</a>
   </section>
 </BaseLayout>
 
 <style>
-  .center {
+  .lost {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(56px, 9vw, 100px) var(--gutter);
     text-align: center;
   }
   .big {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(6rem, 18vw, 11rem);
+    font-size: clamp(4rem, 14vw, 8rem);
     font-weight: 700;
     line-height: 1;
     color: transparent;
-    -webkit-text-stroke: 2px var(--green);
+    -webkit-text-stroke: 2px var(--gold);
   }
   p {
-    margin: 10px 0 28px;
+    margin: 12px 0 28px;
+    font-size: 1.15rem;
   }
 </style>

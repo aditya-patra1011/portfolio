@@ -1,24 +1,28 @@
-/* Design tokens: dark charcoal surfaces, one green accent, condensed uppercase display type. */
+/* Ancient Greek temple theme: marble halls, Aegean blue, gold leaf, terracotta accents. */
 :root {
-  --bg: #0e1112;
-  --bg-2: #131718;
-  --card: #181d1e;
-  --card-2: #1d2324;
-  --line: #262d2e;
-  --ink: #ffffff;
-  --ink-2: #b7bfc0;
-  --ink-3: #7d8788;
-  --green: #1fce6d;
-  --green-rgb: 31, 206, 109;
-  --green-dark: #17a457;
-  --amber: #ffb547;
+  --marble: #f4efe4;
+  --marble-2: #ebe3d3;
+  --stone: #d9cfbb;
+  --parchment: #f1e2bf;
+  --parchment-dark: #d9c193;
+  --ink: #1f2430;
+  --ink-2: #4a4e58;
+  --ink-3: #7a7468;
+  --aegean: #123a5c;
+  --aegean-deep: #0b2238;
+  --sea: #1f6f8b;
+  --gold: #b8892f;
+  --gold-light: #e2bd62;
+  --terracotta: #b1502b;
+  --line: #d3c7ae;
 
-  --font-display: "Oswald", "Arial Narrow", sans-serif;
-  --font-body: "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Cinzel", "Trajan Pro", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, "Times New Roman", serif;
 
-  --max: 1170px;
+  --max: 1140px;
   --gutter: clamp(16px, 4vw, 32px);
-  color-scheme: dark;
+  --meander: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cpath d='M0 18h8V6h16v8h-8v-4' fill='none' stroke='%23b8892f' stroke-width='2.2'/%3E%3Cpath d='M20 18h8V6h12' fill='none' stroke='%23b8892f' stroke-width='2.2'/%3E%3Cpath d='M0 1h40M0 19h40' stroke='%23b8892f' stroke-width='1.4'/%3E%3C/svg%3E");
+  color-scheme: light;
 }
 
 *,
@@ -29,23 +33,26 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  background: var(--bg);
+  background: var(--marble);
 }
 
+/* Marble: warm base, soft veins from an SVG turbulence filter */
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--ink-2);
   font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: 19px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.018' numOctaves='4' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.42 0 0 0 0 0.36 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)' opacity='0.22'/%3E%3C/svg%3E"),
+    var(--marble);
 }
 
 ::selection {
-  background: var(--green);
-  color: #fff;
+  background: var(--gold-light);
+  color: var(--ink);
 }
 
 img {
@@ -56,15 +63,16 @@ img {
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 3px;
   transition: color 0.2s;
 }
 a:hover {
-  color: var(--green);
+  color: var(--terracotta);
 }
 
 :focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
 
@@ -74,15 +82,15 @@ h3,
 h4 {
   font-family: var(--font-display);
   color: var(--ink);
-  text-transform: uppercase;
   font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: 0.005em;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
   margin: 0;
 }
 
-.green {
-  color: var(--green);
+/* keep section tops clear of the sticky header when jumping to them */
+section[id] {
+  scroll-margin-top: 90px;
 }
 
 .wrap {
@@ -92,181 +100,228 @@ h4 {
   padding-inline: var(--gutter);
 }
 
-.section {
-  position: relative;
-  padding-block: clamp(72px, 10vw, 120px);
-}
-.section.alt {
-  background: var(--bg-2);
+/* Greek-key (meander) band */
+.meander {
+  height: 20px;
+  background: var(--meander) repeat-x center / 40px 20px;
 }
 
-/* Small green uppercase label above a heading */
-.eyebrow {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 500;
+.numeral {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--green);
-  margin-bottom: 8px;
+  color: var(--gold);
 }
 
-/* Paragraph with the green left rule */
-.lead-rule {
-  border-left: 2px solid var(--green);
-  padding-left: 18px;
-  color: var(--ink);
-  margin: 0;
-}
-
-/* Green button with the white arrow box */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-  padding: 10px 10px 10px 22px;
-  background: var(--green);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
+  gap: 10px;
+  padding: 12px 26px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
   font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border: 0;
-  border-radius: 2px;
+  text-decoration: none;
+  color: var(--marble);
+  background: var(--aegean);
+  border: 1px solid var(--aegean);
+  box-shadow: inset 0 0 0 3px var(--aegean), inset 0 0 0 4px rgba(226, 189, 98, 0.7);
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-.btn::after {
-  content: "";
-  width: 26px;
-  height: 26px;
-  border-radius: 2px;
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231fce6d' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M10 7l5 5-5 5'/%3E%3C/svg%3E")
-      center / 14px no-repeat,
-    #fff;
+  transition: background 0.2s, color 0.2s;
 }
 .btn:hover {
-  color: #fff;
-  background: var(--green-dark);
+  color: var(--marble);
+  background: var(--aegean-deep);
 }
-.btn.ghost {
-  background: transparent;
-  border: 1px solid var(--line);
+.btn.gold {
+  color: var(--ink);
+  background: var(--gold-light);
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 3px var(--gold-light), inset 0 0 0 4px rgba(31, 36, 48, 0.35);
+}
+.btn.gold:hover {
+  background: #f0cf7c;
   color: var(--ink);
 }
-.btn.ghost:hover {
-  border-color: var(--green);
+.btn.ghost {
+  color: inherit;
+  background: transparent;
+  border-color: currentColor;
+  box-shadow: none;
 }
 
 .tag {
   display: inline-block;
-  font-size: 0.74rem;
-  padding: 2px 10px;
-  background: var(--card-2);
+  font-size: 0.8rem;
+  padding: 0 10px;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 999px;
   color: var(--ink-2);
-  border-radius: 2px;
   white-space: nowrap;
 }
 
 .status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--green);
-}
-.status::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
+  color: var(--sea);
 }
 .status[data-status="in-progress"] {
-  color: var(--amber);
+  color: var(--terracotta);
 }
 
-/* Faint topographic contour lines used behind dark sections */
-.contours {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  background: url("/contours.svg") center / 1400px auto no-repeat;
-}
-
-/* Long-form text inside case studies */
+/* Long-form text written on papyrus */
 .prose {
-  max-width: 72ch;
+  color: #3b3226;
 }
 .prose h2 {
-  font-size: 1.6rem;
-  margin: 2em 0 0.6em;
+  font-size: 1.35rem;
+  margin: 1.8em 0 0.5em;
+  color: #3a2a16;
+}
+.prose h2::before {
+  content: "❧ ";
+  color: var(--terracotta);
 }
 .prose h3 {
-  font-size: 1.2rem;
-  margin: 1.6em 0 0.5em;
+  font-size: 1.1rem;
+  margin: 1.4em 0 0.4em;
 }
 .prose strong {
-  color: var(--ink);
+  color: #2a1d0e;
 }
 .prose a {
-  color: var(--green);
+  color: var(--terracotta);
 }
 .prose ul,
 .prose ol {
-  padding-left: 1.2em;
+  padding-left: 1.3em;
 }
 .prose li::marker {
-  color: var(--green);
+  color: var(--terracotta);
 }
 .prose code {
-  font-size: 0.88em;
-  color: var(--green);
-  background: var(--card-2);
-  border-radius: 2px;
-  padding: 1px 6px;
+  font-size: 0.8em;
+  background: rgba(120, 90, 40, 0.12);
+  padding: 1px 5px;
+  border-radius: 3px;
 }
 .prose pre {
   overflow-x: auto;
-  padding: 16px;
-  background: var(--card) !important;
-  font-size: 0.85rem;
+  padding: 14px;
+  background: rgba(60, 40, 10, 0.08) !important;
+  font-size: 0.78rem;
 }
 .prose pre code {
   background: none;
   padding: 0;
-  color: inherit;
 }
 .prose img {
   width: 100%;
-  margin: 1.6em 0;
-  border-radius: 2px;
+  margin: 1.4em 0;
+  border: 6px solid #fff8e6;
+  box-shadow: 0 6px 18px rgba(60, 40, 10, 0.25);
+  filter: sepia(0.15);
 }
 .prose blockquote {
-  margin: 1.5em 0;
-  padding-left: 18px;
-  border-left: 2px solid var(--green);
-  color: var(--ink);
+  margin: 1.4em 0;
+  padding-left: 16px;
+  border-left: 3px solid var(--gold);
+  font-style: italic;
 }
 
-/* Scroll-in reveal; content stays visible without JS or with reduced motion */
+/* Project scroll content (project pages and the unrolling modal on any page) */
+.sc-head {
+  text-align: center;
+}
+.sc-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+.sc-title {
+  font-size: clamp(1.9rem, 4.6vw, 2.8rem);
+  color: #3a2a16;
+  margin-top: 8px;
+}
+.sc-summary {
+  max-width: 60ch;
+  margin: 14px auto 0;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: #5a4628;
+}
+.sc-rule {
+  margin: 18px 0 26px;
+  color: var(--gold);
+  letter-spacing: 0.6em;
+}
+.sc-cover {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  object-position: top;
+  border: 6px solid #fff8e6;
+  box-shadow: 0 8px 22px rgba(60, 40, 10, 0.25);
+  filter: sepia(0.15);
+}
+.sc-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px 40px;
+  margin: 28px 0 8px;
+  padding: 18px 0;
+  border-block: 1px solid rgba(150, 110, 50, 0.35);
+}
+.sc-facts .wide {
+  grid-column: 1 / -1;
+}
+.sc-facts dt {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a6d3e;
+}
+.sc-facts dd {
+  margin: 2px 0 0;
+  color: #3b3226;
+}
+.sc-facts ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.sc-facts li::marker {
+  content: "✦ ";
+  color: var(--gold);
+}
+.sc-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 36px 0 0;
+}
+@media (max-width: 560px) {
+  .sc-facts {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
   }
   .js [data-reveal] {
     opacity: 0;
-    transform: translateY(24px);
-    transition:
-      opacity 0.7s ease,
-      transform 0.7s ease;
+    transform: translateY(26px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
   }
   .js [data-reveal].in {
     opacity: 1;

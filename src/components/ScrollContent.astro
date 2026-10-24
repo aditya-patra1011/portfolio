@@ -1,0 +1,58 @@
+---
+// What is written on a project's scroll. Used on the project page and lifted into the modal.
+import { render } from "astro:content";
+import type { Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { title, summary, status, year, domains, stack, highlights, repo, demo, cover } = project.data;
+const { Content } = await render(project);
+---
+
+<div data-scroll-content>
+  <header class="sc-head">
+    <span class="sc-eyebrow">{domains.join(" · ")} · {year}</span>
+    <h2 class="sc-title">{title}</h2>
+    <p class="sc-summary">{summary}</p>
+    <div class="sc-rule" aria-hidden="true">✦ ✦ ✦</div>
+  </header>
+
+  {cover && <img class="sc-cover" src={cover} alt={`${title} screenshot`} />}
+
+  <dl class="sc-facts">
+    <div>
+      <dt>State</dt>
+      <dd><span class="status" data-status={status}>{status === "shipped" ? "Complete" : "In progress"}</span></dd>
+    </div>
+    <div>
+      <dt>Tools</dt>
+      <dd>{stack.join(", ")}</dd>
+    </div>
+    {
+      highlights.length > 0 && (
+        <div class="wide">
+          <dt>Deeds</dt>
+          <dd>
+            <ul>
+              {highlights.map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <div class="prose">
+    <Content />
+  </div>
+
+  <p class="sc-links">
+    <a class="btn" href={repo}>Read the source</a>
+    {demo && <a class="btn gold" href={demo}>Live demo</a>}
+  </p>
+</div>

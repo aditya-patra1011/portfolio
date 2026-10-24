@@ -1,0 +1,65 @@
+---
+// Banner for inner pages: a small pediment over the page title, with a way back to the temple.
+interface Props {
+  title: string;
+  greek: string;
+  back?: { label: string; href: string };
+}
+
+const { title, greek, back = { label: "Back to the temple", href: "/" } } = Astro.props;
+---
+
+<section class="banner">
+  <svg class="ped" viewBox="0 0 600 90" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 90L300 6l300 84z" fill="#f8f3e8" stroke="#b5a688" stroke-width="2" />
+    <path d="M40 84L300 18l260 66" fill="none" stroke="#c8bb9f" stroke-width="1.5" />
+  </svg>
+  <div class="slab">
+    <span class="greek" lang="el">{greek}</span>
+    <h1>{title}</h1>
+    <a href={back.href} class="back">‹ {back.label}</a>
+  </div>
+  <div class="meander" aria-hidden="true"></div>
+</section>
+
+<style>
+  .banner {
+    padding-top: clamp(36px, 6vw, 60px);
+    background: linear-gradient(180deg, #0f2f4d, #2a5f86 70%, #4f86a8);
+    text-align: center;
+  }
+  .ped {
+    display: block;
+    width: min(760px, 92vw);
+    height: clamp(50px, 8vw, 80px);
+    margin: 0 auto;
+  }
+  .slab {
+    width: min(760px, 92vw);
+    margin: 0 auto;
+    padding: 22px 20px 26px;
+    background: linear-gradient(180deg, #f8f3e8, #e7decb);
+    border-inline: 1px solid #b5a688;
+  }
+  .greek {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+  }
+  h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    margin: 6px 0 10px;
+  }
+  .back {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sea);
+    text-decoration: none;
+  }
+  .meander {
+    background-color: var(--aegean);
+  }
+</style>

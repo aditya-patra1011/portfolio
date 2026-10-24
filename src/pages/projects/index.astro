@@ -1,37 +1,28 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageBanner from "../../components/PageBanner.astro";
-import SectionHead from "../../components/SectionHead.astro";
-import ProjectCard from "../../components/ProjectCard.astro";
+import TempleBanner from "../../components/TempleBanner.astro";
+import ScrollCard from "../../components/ScrollCard.astro";
 import { getProjects } from "../../lib/projects";
 
 const projects = await getProjects();
 const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
 ---
 
-<BaseLayout title="Projects" description="Machine-learning and data projects by M. Aditya Patra.">
-  <PageBanner title="Portfolio" crumbs={[{ label: "Home", href: "/" }, { label: "Projects" }]} />
+<BaseLayout title="The Treasury" description="Machine-learning and data projects by M. Aditya Patra.">
+  <TempleBanner title="The Treasury" greek="ΘΗΣΑΥΡΟΣ" />
 
-  <section class="section">
+  <section class="treasury">
     <div class="wrap">
-      <SectionHead
-        eyebrow="All work"
-        ghost="Projects"
-        title={`${projects.length} projects so far`}
-        accent="projects"
-        intro="Filter by area. Each card opens a write-up covering the problem, the data, what I tried, and what I'd change."
-      />
-
-      <div class="filters" role="group" aria-label="Filter by area">
+      <p class="intro">{projects.length} scrolls are kept here. Choose a subject, then click a scroll to unroll it.</p>
+      <div class="filters" role="group" aria-label="Filter by subject">
         <button type="button" data-filter="all" aria-pressed="true">All</button>
         {domains.map((d) => <button type="button" data-filter={d} aria-pressed="false">{d}</button>)}
       </div>
-
-      <div class="grid">
+      <div class="scrolls">
         {
-          projects.map((p) => (
+          projects.map((p, i) => (
             <div class="item" data-domains={p.data.domains.join("|")}>
-              <ProjectCard project={p} />
+              <ScrollCard project={p} index={i} />
             </div>
           ))
         }
@@ -49,7 +40,6 @@ const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
       buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
       items.forEach((el) => {
         el.hidden = f !== "all" && !el.dataset.domains!.split("|").includes(f);
-        // cards hidden at load never got their reveal; show them straight away
         el.querySelector("[data-reveal]")?.classList.add("in");
       });
     }),
@@ -57,42 +47,48 @@ const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
 </script>
 
 <style>
+  .treasury {
+    padding-block: clamp(48px, 7vw, 80px) clamp(72px, 10vw, 120px);
+  }
+  .intro {
+    text-align: center;
+    font-size: 1.2rem;
+    font-style: italic;
+    margin: 0 0 24px;
+  }
   .filters {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
   }
   .filters button {
-    font: inherit;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 8px 18px;
-    border: 1px solid var(--line);
-    border-radius: 2px;
-    background: var(--card);
+    padding: 8px 16px;
+    border: 1px solid var(--parchment-dark);
+    background: #fbf6ea;
     color: var(--ink-2);
     cursor: pointer;
-    transition:
-      border-color 0.2s,
-      color 0.2s,
-      background 0.2s;
+    transition: background 0.2s, color 0.2s;
   }
   .filters button:hover {
-    border-color: var(--green);
-    color: #fff;
+    border-color: var(--gold);
   }
   .filters button[aria-pressed="true"] {
-    background: var(--green);
-    border-color: var(--green);
-    color: #fff;
+    background: var(--aegean);
+    border-color: var(--aegean);
+    color: var(--gold-light);
   }
-  .grid {
+  .scrolls {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    gap: 40px 34px;
+    padding-inline: 10px;
   }
   .item {
     display: flex;
@@ -104,12 +100,12 @@ const domains = [...new Set(projects.flatMap((p) => p.data.domains))].sort();
     display: none;
   }
   @media (max-width: 1024px) {
-    .grid {
+    .scrolls {
       grid-template-columns: repeat(2, 1fr);
     }
   }
   @media (max-width: 560px) {
-    .grid {
+    .scrolls {
       grid-template-columns: 1fr;
     }
   }

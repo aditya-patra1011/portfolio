@@ -1,0 +1,523 @@
+---
+// Poseidon, the tour guide. He stays in the bottom-right corner and walks visitors through the page
+// step by step: each section marked [data-tour] is a step. Scrolling moves the steps along, and the
+// Back / Next buttons scroll to the previous or next step. On a step with [data-tour-point] he aims his
+// trident at that element. Visitors can dismiss him and call him back.
+---
+
+<div class="guide" data-guide hidden>
+  <div class="panel" role="region" aria-label="Guided tour">
+    <div class="panel-head">
+      <span class="who">Poseidon · your guide</span>
+      <button class="dismiss" type="button" data-dismiss aria-label="Dismiss the guide">×</button>
+    </div>
+    <p class="step-label"><span data-count></span> · <strong data-title></strong></p>
+    <ol class="dots" data-dots></ol>
+    <p class="line" data-line aria-live="polite"></p>
+    <div class="nav">
+      <button type="button" class="step-btn" data-prev>‹ Back</button>
+      <button type="button" class="step-btn next" data-next>Next ›</button>
+    </div>
+  </div>
+
+  <div class="bot" data-bot>
+    <svg viewBox="0 -20 170 200" class="figure" aria-hidden="true">
+      <defs>
+        <linearGradient id="pz-gold" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#f3d27a" />
+          <stop offset="1" stop-color="#b8892f" />
+        </linearGradient>
+        <linearGradient id="pz-cape" x1="0" x2="1">
+          <stop offset="0" stop-color="#1f6f8b" />
+          <stop offset="1" stop-color="#123a5c" />
+        </linearGradient>
+      </defs>
+
+      <ellipse class="shadow" cx="60" cy="172" rx="34" ry="5" fill="rgba(20,30,40,0.25)" />
+
+      <g class="body">
+        <!-- cape -->
+        <path d="M36 78C26 110 24 140 28 162h64c4-22 2-52-8-84z" fill="url(#pz-cape)" />
+
+        <!-- legs -->
+        <g class="leg leg-l">
+          <rect x="47" y="126" width="11" height="36" rx="5" fill="#e8b98e" />
+          <path d="M45 158h16v8H43c-1-4 0-6 2-8z" fill="#7a4a1f" />
+          <path d="M48 142l9 5M48 150l9 5" stroke="#7a4a1f" stroke-width="2" />
+        </g>
+        <g class="leg leg-r">
+          <rect x="62" y="126" width="11" height="36" rx="5" fill="#e8b98e" />
+          <path d="M60 158h16c2 2 3 4 2 8H60z" fill="#7a4a1f" />
+          <path d="M63 142l9 5M63 150l9 5" stroke="#7a4a1f" stroke-width="2" />
+        </g>
+
+        <!-- chiton -->
+        <path d="M40 74h40l8 58H32z" fill="#f8f4ea" stroke="#d9cfbb" stroke-width="1" />
+        <path d="M33 124h54l1 8H32z" fill="#1f6f8b" />
+        <path d="M36 127h4v-2h4v4h4v-4h4v4h4v-4h4v4h4v-4h4v4h4v-4h4v4h4v-4h4" fill="none" stroke="#f3d27a" stroke-width="1" />
+        <path d="M44 74l30 44" stroke="#d1a447" stroke-width="5" stroke-linecap="round" />
+
+        <!-- left arm (waves) -->
+        <g class="arm-l">
+          <path d="M40 78c-8 4-12 14-12 26" stroke="#f8f4ea" stroke-width="11" stroke-linecap="round" fill="none" />
+          <path d="M30 98c-1 6-1 10 0 14" stroke="#e8b98e" stroke-width="8" stroke-linecap="round" fill="none" />
+          <circle cx="30" cy="116" r="5.5" fill="#e8b98e" />
+          <rect x="24" y="92" width="12" height="4" rx="2" fill="url(#pz-gold)" />
+        </g>
+
+        <!-- head -->
+        <g class="head">
+          <!-- hair -->
+          <path d="M36 44c-4-18 8-30 24-30s28 12 24 30c-2-6-6-10-8-10-6 4-26 4-32 0-2 0-6 4-8 10z" fill="#dfe9ef" />
+          <circle cx="60" cy="46" r="21" fill="#f2c9a0" />
+          <path d="M39 42c2-12 10-18 21-18s19 6 21 18c-4-6-10-9-21-9s-17 3-21 9z" fill="#dfe9ef" />
+          <!-- eyes -->
+          <g class="eyes">
+            <ellipse cx="52" cy="45" rx="3" ry="3.6" fill="#1f2430" />
+            <ellipse cx="68" cy="45" rx="3" ry="3.6" fill="#1f2430" />
+            <circle cx="53" cy="44" r="1" fill="#fff" />
+            <circle cx="69" cy="44" r="1" fill="#fff" />
+          </g>
+          <path d="M47 38q5-3 9 0M64 38q5-3 9 0" stroke="#b9c6cf" stroke-width="2" fill="none" stroke-linecap="round" />
+          <circle cx="46" cy="52" r="3.5" fill="#f1a98c" opacity="0.6" />
+          <circle cx="74" cy="52" r="3.5" fill="#f1a98c" opacity="0.6" />
+          <!-- beard, wavy like surf -->
+          <path
+            d="M40 52c2 10 6 16 10 20 2 6 6 10 10 12 4-2 8-6 10-12 4-4 8-10 10-20-4 4-8 5-12 4-4 3-12 3-16 0-4 1-8 0-12-4z"
+            fill="#e9f1f5"
+            stroke="#c4d3dc"
+            stroke-width="1"
+          />
+          <path d="M48 64q4 4 0 8M60 66q4 5 0 10M72 64q-4 4 0 8" stroke="#b6c9d4" stroke-width="1.4" fill="none" />
+          <path d="M54 56q6 4 12 0" stroke="#9c5a3c" stroke-width="2" fill="none" stroke-linecap="round" class="mouth" />
+          <!-- crown -->
+          <path d="M40 30l4-14 6 10 4-14 6 12 6-12 4 14 6-10 4 14z" fill="url(#pz-gold)" stroke="#9a6f22" stroke-width="1" />
+          <rect x="40" y="27" width="40" height="6" rx="2" fill="url(#pz-gold)" stroke="#9a6f22" stroke-width="1" />
+          <circle cx="60" cy="30" r="2.2" fill="#1f6f8b" />
+        </g>
+
+        <!-- right arm + trident. Drawn pointing right from the shoulder (82,80); rotated by --aim. -->
+        <g class="arm-r">
+          <path d="M80 80h14" stroke="#f8f4ea" stroke-width="11" stroke-linecap="round" />
+          <path d="M94 80h8" stroke="#e8b98e" stroke-width="8" stroke-linecap="round" />
+          <rect x="88" y="74" width="4" height="12" rx="2" fill="url(#pz-gold)" />
+          <path d="M84 80h68" stroke="#d1a447" stroke-width="3.5" stroke-linecap="round" />
+          <path d="M150 70v20" stroke="#d1a447" stroke-width="3.5" stroke-linecap="round" />
+          <path d="M150 70h12M150 90h12M150 80h17" stroke="#d1a447" stroke-width="3.5" stroke-linecap="round" />
+          <path d="M162 66l6 4-6 4zM162 86l6 4-6 4zM167 76l6 4-6 4z" fill="#f3d27a" />
+          <circle cx="104" cy="80" r="5.5" fill="#e8b98e" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
+
+  <button class="summon" type="button" data-summon hidden aria-label="Call the guide back">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M6 6v5a6 6 0 0 0 12 0V6M6 6l-2 3M18 6l2 3M12 2l-2 3M12 2l2 3" /></svg>
+  </button>
+</div>
+
+<script>
+  const guide = document.querySelector<HTMLElement>("[data-guide]");
+  const steps = [...document.querySelectorAll<HTMLElement>("[data-tour]")];
+
+  if (guide && steps.length) {
+    const bot = guide.querySelector<HTMLElement>("[data-bot]")!;
+    const panel = guide.querySelector<HTMLElement>(".panel")!;
+    const line = guide.querySelector<HTMLElement>("[data-line]")!;
+    const count = guide.querySelector<HTMLElement>("[data-count]")!;
+    const title = guide.querySelector<HTMLElement>("[data-title]")!;
+    const dots = guide.querySelector<HTMLOListElement>("[data-dots]")!;
+    const prev = guide.querySelector<HTMLButtonElement>("[data-prev]")!;
+    const next = guide.querySelector<HTMLButtonElement>("[data-next]")!;
+    const summon = guide.querySelector<HTMLButtonElement>("[data-summon]")!;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const KEY = "guide-dismissed";
+
+    let index = -1;
+    let pointAt: Element | null = null;
+    let typing = 0;
+
+    // one dot per step; clicking a dot jumps to that step
+    steps.forEach((s, i) => {
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", `Step ${i + 1}: ${s.dataset.tourTitle ?? s.id}`);
+      b.addEventListener("click", () => go(i));
+      li.append(b);
+      dots.append(li);
+    });
+
+    function say(text: string) {
+      window.clearInterval(typing);
+      if (reduce) {
+        line.textContent = text;
+        return;
+      }
+      let i = 0;
+      line.textContent = "";
+      guide!.classList.add("talking");
+      typing = window.setInterval(() => {
+        i += 2;
+        line.textContent = text.slice(0, i);
+        if (i >= text.length) {
+          window.clearInterval(typing);
+          guide!.classList.remove("talking");
+        }
+      }, 20);
+    }
+
+    function aim() {
+      if (!pointAt) {
+        bot.style.setProperty("--aim", "-62deg"); // trident raised
+        return;
+      }
+      const r = pointAt.getBoundingClientRect();
+      const b = bot.getBoundingClientRect();
+      // He faces left, so the shoulder (82,80 in a 170x200 viewBox starting at y=-20) is mirrored.
+      const sx = b.left + (1 - 82 / 170) * b.width;
+      const sy = b.top + (100 / 200) * b.height;
+      const dx = sx - (r.left + r.width / 2);
+      const dy = r.top + r.height / 2 - sy;
+      const deg = Math.max(-85, Math.min(40, (Math.atan2(dy, dx) * 180) / Math.PI));
+      bot.style.setProperty("--aim", `${deg}deg`);
+    }
+
+    function show(i: number) {
+      if (i === index) return;
+      index = i;
+      const step = steps[i];
+      count.textContent = `Step ${i + 1} of ${steps.length}`;
+      title.textContent = step.dataset.tourTitle ?? "";
+      [...dots.children].forEach((li, j) => {
+        li.classList.toggle("done", j < i);
+        li.classList.toggle("current", j === i);
+      });
+      prev.disabled = i === 0;
+      next.textContent = i === steps.length - 1 ? "Back to top ↑" : "Next ›";
+      pointAt = step.dataset.tourPoint ? document.querySelector(step.dataset.tourPoint) : null;
+      guide!.classList.toggle("pointing", !!pointAt);
+      say(step.dataset.tour ?? "");
+      aim();
+    }
+
+    function go(i: number) {
+      const target = steps[Math.max(0, Math.min(steps.length - 1, i))];
+      target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    }
+
+    prev.addEventListener("click", () => go(index - 1));
+    next.addEventListener("click", () => (index === steps.length - 1 ? go(0) : go(index + 1)));
+
+    // The step whose section crosses the middle of the viewport is the current one.
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) show(steps.indexOf(e.target as HTMLElement));
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+
+    let raf = 0;
+    const onScroll = () => {
+      if (!pointAt || raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        aim();
+      });
+    };
+
+    function start() {
+      guide!.hidden = false;
+      summon.hidden = true;
+      bot.hidden = false;
+      panel.hidden = false;
+      index = -1;
+      const mid = innerHeight / 2;
+      const first = steps.findIndex((s) => {
+        const r = s.getBoundingClientRect();
+        return r.top <= mid && r.bottom >= mid;
+      });
+      show(first === -1 ? 0 : first);
+      if (!reduce) {
+        guide!.classList.add("wave");
+        window.setTimeout(() => guide!.classList.remove("wave"), 2600);
+      }
+      steps.forEach((s) => io.observe(s));
+      addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    function dismiss() {
+      io.disconnect();
+      removeEventListener("scroll", onScroll);
+      window.clearInterval(typing);
+      bot.hidden = true;
+      panel.hidden = true;
+      summon.hidden = false;
+      try {
+        localStorage.setItem(KEY, "1");
+      } catch {}
+    }
+
+    guide.querySelector("[data-dismiss]")!.addEventListener("click", dismiss);
+    summon.addEventListener("click", () => {
+      try {
+        localStorage.removeItem(KEY);
+      } catch {}
+      start();
+    });
+
+    // When a project scroll is opened, Poseidon comments on it.
+    document.addEventListener("scroll-opened", () => {
+      if (!bot.hidden) say("Take your time reading. Close it with the × when you're done.");
+    });
+
+    let dismissed = false;
+    try {
+      dismissed = localStorage.getItem(KEY) === "1";
+    } catch {}
+    if (dismissed) {
+      guide.hidden = false;
+      bot.hidden = true;
+      panel.hidden = true;
+      summon.hidden = false;
+    } else {
+      start();
+    }
+  }
+</script>
+
+<style>
+  .guide {
+    position: fixed;
+    right: 18px;
+    bottom: 0;
+    z-index: 35;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    pointer-events: none;
+  }
+  .guide[hidden],
+  .bot[hidden],
+  .panel[hidden],
+  .summon[hidden] {
+    display: none;
+  }
+  .bot {
+    --aim: -62deg;
+    width: 104px;
+    transform: scaleX(-1); /* faces the page */
+  }
+  .figure {
+    display: block;
+    width: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 6px 10px rgba(20, 30, 40, 0.2));
+  }
+  .arm-r {
+    transform-origin: 82px 80px;
+    transform: rotate(var(--aim));
+    transition: transform 0.6s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+  .arm-l {
+    transform-origin: 40px 80px;
+  }
+  .eyes {
+    transform-origin: 60px 45px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .body {
+      animation: bob 3.2s ease-in-out infinite;
+    }
+    .eyes {
+      animation: blink 5s infinite;
+    }
+    .wave .arm-l {
+      animation: wave 0.5s ease-in-out 5 alternate;
+    }
+    .talking .mouth {
+      animation: talk 0.18s ease-in-out infinite alternate;
+      transform-origin: 60px 57px;
+    }
+    @keyframes bob {
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+    @keyframes wave {
+      from {
+        transform: rotate(40deg);
+      }
+      to {
+        transform: rotate(150deg);
+      }
+    }
+    @keyframes blink {
+      0%,
+      94%,
+      100% {
+        transform: scaleY(1);
+      }
+      96% {
+        transform: scaleY(0.1);
+      }
+    }
+    @keyframes talk {
+      to {
+        transform: scaleY(1.9);
+      }
+    }
+  }
+
+  .panel {
+    width: 280px;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: #fffcf5;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(20, 30, 40, 0.18);
+    pointer-events: auto;
+    color: var(--ink);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .who {
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sea);
+  }
+  .dismiss {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink-3);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .dismiss:hover {
+    background: var(--marble-2);
+    color: var(--ink);
+  }
+  .step-label {
+    margin: 4px 0 6px;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  .step-label strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+  .dots :global(li) {
+    flex: 1;
+  }
+  .dots :global(button) {
+    display: block;
+    width: 100%;
+    height: 5px;
+    padding: 0;
+    border: 0;
+    border-radius: 3px;
+    background: var(--line);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .dots :global(.done button) {
+    background: var(--gold-light);
+  }
+  .dots :global(.current button) {
+    background: var(--gold);
+  }
+  .line {
+    margin: 0;
+    min-height: 4.4em;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .step-btn {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .step-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .step-btn.next {
+    background: var(--aegean);
+    border-color: var(--aegean);
+    color: #fff;
+  }
+  .step-btn:not(:disabled):hover {
+    border-color: var(--gold);
+  }
+  .summon {
+    width: 48px;
+    height: 48px;
+    margin: 0 0 16px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    background: var(--aegean);
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 8px 20px rgba(11, 34, 56, 0.3);
+  }
+  .summon svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: var(--gold-light);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 640px) {
+    .guide {
+      right: 8px;
+    }
+    .bot {
+      width: 70px;
+    }
+    .panel {
+      width: min(250px, calc(100vw - 96px));
+      font-size: 0.88rem;
+    }
+    .line {
+      min-height: 5.6em;
+    }
+  }
+</style>

@@ -1,111 +1,75 @@
 ---
 import { site } from "../data/site";
 const year = new Date().getFullYear();
-const prefix = Astro.url.pathname === "/" ? "" : "/";
 ---
 
-<section class="cta" id="contact">
-  <div class="wrap inner">
-    <div>
-      <span class="eyebrow light">Open to work</span>
-      <h2>Looking for an ML / data internship or graduate role</h2>
-    </div>
-    <a class="mail" href={`mailto:${site.links.email}`}>
-      <span>{site.links.email}</span>
-      <span class="go" aria-hidden="true">Say hello</span>
-    </a>
-  </div>
-</section>
-
 <footer class="footer">
-  <div class="wrap">
-    <ul class="links">
-      <li><a href={`${prefix}#about`}>About me</a></li>
-      <li><a href={`${prefix}#career`}>Career</a></li>
-      <li><a href="/projects/">Projects</a></li>
-      <li><a href={site.links.resume}>Résumé</a></li>
+  <div class="meander" aria-hidden="true"></div>
+  <div class="wrap inner">
+    <p class="motto">
+      <span lang="el">ΓΝΩΘΙ ΣΕΑΥΤΟΝ</span>
+      <span class="tr">Know thyself, and validate your models</span>
+    </p>
+    <ul>
       <li><a href={site.links.github}>GitHub</a></li>
       <li><a href={site.links.linkedin}>LinkedIn</a></li>
+      <li><a href={`mailto:${site.links.email}`}>Email</a></li>
+      <li><a href={site.links.resume}>Résumé</a></li>
     </ul>
-    <p>Copyright © {year} {site.name} · {site.location}</p>
+    <p class="copy">© {year} {site.name} · {site.location}</p>
   </div>
 </footer>
 
 <style>
-  .cta {
-    background: var(--green);
-    color: #fff;
-  }
-  .inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px 40px;
-    padding-block: 52px;
-  }
-  .eyebrow.light {
-    color: rgba(255, 255, 255, 0.8);
-  }
-  h2 {
-    font-size: clamp(1.5rem, 3.2vw, 2.2rem);
-    max-width: 22ch;
-  }
-  .mail {
-    display: flex;
-    align-items: stretch;
-    background: #fff;
-    border-radius: 2px;
-    overflow: hidden;
-    max-width: 100%;
-  }
-  .mail span:first-child {
-    padding: 16px 22px;
-    color: #4b5455;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .go {
-    display: flex;
-    align-items: center;
-    padding-inline: 22px;
-    background: #111516;
-    color: #fff;
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transition: background 0.2s;
-  }
-  .mail:hover .go {
-    background: #000;
-  }
   .footer {
-    background: #0a0c0d;
-    padding-block: 40px;
+    background: var(--aegean-deep);
+    color: #c3ccd5;
     text-align: center;
   }
-  .links {
+  .footer .meander {
+    filter: brightness(1.2);
+  }
+  .inner {
+    padding-block: 40px;
+  }
+  .motto {
+    display: grid;
+    gap: 2px;
+    margin: 0 0 18px;
+  }
+  .motto span:first-child {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+  }
+  .tr {
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+  ul {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px 32px;
+    gap: 8px 28px;
     list-style: none;
-    margin: 0 0 14px;
+    margin: 0 0 16px;
     padding: 0;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+  }
+  a {
+    text-decoration: none;
     color: #fff;
   }
-  .footer p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--ink-3);
+  a:hover {
+    color: var(--gold-light);
   }
-  @media (max-width: 560px) {
-    .go {
-      display: none;
-    }
+  .copy {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #8a98a6;
   }
 </style>
