@@ -1,7 +1,7 @@
 ---
-import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageBanner from "../../components/PageBanner.astro";
+import TempleBanner from "../../components/TempleBanner.astro";
+import ScrollContent from "../../components/ScrollContent.astro";
 import { getProjects, type Project } from "../../lib/projects";
 
 export async function getStaticPaths() {
@@ -23,188 +23,96 @@ interface Props {
 }
 
 const { project, prev, next } = Astro.props;
-const { title, summary, status, year, domains, stack, highlights, repo, demo, cover } = project.data;
-const { Content } = await render(project);
 ---
 
-<BaseLayout title={title} description={summary}>
-  <PageBanner
-    title={title}
-    crumbs={[{ label: "Home", href: "/" }, { label: "Projects", href: "/projects/" }, { label: title }]}
-  />
+<BaseLayout title={project.data.title} description={project.data.summary}>
+  <TempleBanner title="A scroll from the treasury" greek="ΒΙΒΛΙΟΝ" back={{ label: "Back to the treasury", href: "/projects/" }} />
 
-  <section class="section">
-    <div class="wrap">
-      {cover && <img class="cover" src={cover} alt={`${title} screenshot`} />}
-
-      <div class="layout">
-        <article>
-          <span class="eyebrow">{domains.join(" / ")}</span>
-          <p class="lead-rule summary">{summary}</p>
-          <div class="prose">
-            <Content />
-          </div>
-        </article>
-
-        <aside class="info">
-          <h3>Project <span class="green">info</span></h3>
-          <dl>
-            <div>
-              <dt>Status</dt>
-              <dd><span class="status" data-status={status}>{status === "shipped" ? "Shipped" : "In progress"}</span></dd>
-            </div>
-            <div>
-              <dt>Year</dt>
-              <dd>{year}</dd>
-            </div>
-            <div>
-              <dt>Stack</dt>
-              <dd class="tags">{stack.map((s) => <span class="tag">{s}</span>)}</dd>
-            </div>
-          </dl>
-          {
-            highlights.length > 0 && (
-              <ul class="highlights">
-                {highlights.map((h) => (
-                  <li>{h}</li>
-                ))}
-              </ul>
-            )
-          }
-          <div class="links">
-            <a class="btn" href={repo}>Source code</a>
-            {demo && <a class="btn ghost" href={demo}>Live demo</a>}
-          </div>
-        </aside>
-      </div>
-
-      <nav class="pager" aria-label="More projects">
-        <a href={`/projects/${prev.id}/`} class="prev">
-          <span>Previous</span>
-          {prev.data.title}
-        </a>
-        <a href={`/projects/${next.id}/`} class="next">
-          <span>Next</span>
-          {next.data.title}
-        </a>
-      </nav>
+  <section class="page">
+    <div class="scroll">
+      <span class="rod" aria-hidden="true"></span>
+      <article class="sheet">
+        <ScrollContent project={project} />
+      </article>
+      <span class="rod" aria-hidden="true"></span>
     </div>
+
+    <nav class="pager" aria-label="More scrolls">
+      <a href={`/projects/${prev.id}/`}><span>‹ Previous scroll</span>{prev.data.title}</a>
+      <a href={`/projects/${next.id}/`} class="next"><span>Next scroll ›</span>{next.data.title}</a>
+    </nav>
   </section>
 </BaseLayout>
 
 <style>
-  .cover {
-    width: 100%;
-    max-height: 560px;
-    object-fit: cover;
-    object-position: top;
-    margin-bottom: clamp(40px, 6vw, 64px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  .page {
+    width: min(900px, 94vw);
+    margin: 0 auto;
+    padding-block: clamp(48px, 7vw, 80px) clamp(72px, 10vw, 110px);
   }
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 330px;
-    gap: clamp(32px, 5vw, 64px);
-    align-items: start;
-  }
-  .summary {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-  }
-  .info {
-    position: sticky;
-    top: 104px;
-    background: var(--card);
-    padding: 30px 28px;
-  }
-  .info h3 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-  }
-  dl {
-    margin: 0;
-    display: grid;
-    gap: 16px;
-  }
-  dt {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-3);
-  }
-  dd {
-    margin: 4px 0 0;
-    color: #fff;
-  }
-  .tags {
+  .scroll {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    flex-direction: column;
   }
-  .highlights {
-    list-style: none;
-    margin: 24px 0 0;
-    padding: 20px 0 0;
-    border-top: 1px solid var(--line);
-    display: grid;
-    gap: 10px;
-    font-size: 0.9rem;
-  }
-  .highlights li {
+  .rod {
     position: relative;
-    padding-left: 20px;
+    z-index: 1;
+    height: 26px;
+    margin-inline: -14px;
+    border-radius: 13px;
+    background: linear-gradient(180deg, #b07c3e, #6e4317 55%, #3f240b);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }
-  .highlights li::before {
+  .rod::before,
+  .rod::after {
     content: "";
     position: absolute;
-    left: 0;
-    top: 0.65em;
-    width: 8px;
-    height: 8px;
-    background: var(--green);
+    top: -6px;
+    width: 20px;
+    height: 38px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #f0cf7c, #9a6f22);
   }
-  .links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 26px;
+  .rod::before {
+    left: -14px;
+  }
+  .rod::after {
+    right: -14px;
+  }
+  .sheet {
+    margin-block: -8px;
+    padding: clamp(40px, 6vw, 64px) clamp(20px, 6vw, 64px);
+    background:
+      linear-gradient(90deg, rgba(150, 105, 40, 0.22), transparent 6%, transparent 94%, rgba(150, 105, 40, 0.22)),
+      var(--parchment);
+    box-shadow: 0 20px 40px rgba(60, 40, 10, 0.2);
   }
   .pager {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
-    margin-top: clamp(56px, 8vw, 96px);
-    padding-top: 32px;
-    border-top: 1px solid var(--line);
+    margin-top: 56px;
   }
   .pager a {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     font-family: var(--font-display);
-    font-size: clamp(1.1rem, 2.4vw, 1.5rem);
-    text-transform: uppercase;
-    color: #fff;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    color: var(--ink);
+    text-decoration: none;
   }
   .pager a:hover {
-    color: var(--green);
+    color: var(--terracotta);
   }
   .pager span {
-    font-family: var(--font-body);
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
-    color: var(--green);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
   }
   .next {
     text-align: right;
     align-items: flex-end;
-  }
-  @media (max-width: 900px) {
-    .layout {
-      grid-template-columns: 1fr;
-    }
-    .info {
-      position: static;
-    }
   }
 </style>
