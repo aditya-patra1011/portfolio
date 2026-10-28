@@ -1,45 +1,66 @@
 ---
-// A project shown as a rolled-up papyrus scroll. It links to the project page; with JS it opens
-// the unrolling scroll view instead.
+// A project shown as a rolled-up papyrus scroll. The title link covers the whole card and opens the
+// unrolling scroll view (or the project page without JS). Flagship projects get a wide layout with
+// their highlights, and a live-demo link that sits above the card link.
 import type { Project } from "../lib/projects";
 
 interface Props {
   project: Project;
   index: number;
+  variant?: "default" | "flagship";
 }
 
-const { project, index } = Astro.props;
-const { title, summary, status, year, domains, cover } = project.data;
+const { project, index, variant = "default" } = Astro.props;
+const { title, summary, status, year, domains, cover, highlights, demo, tier } = project.data;
 const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"][index] ?? String(index + 1);
+const wide = variant === "flagship";
 ---
 
-<a class="scroll-card" href={`/projects/${project.id}/`} data-scroll-open={project.id} data-reveal>
+<article class:list={["scroll-card", { wide }]} data-reveal>
   <span class="rod" aria-hidden="true"></span>
   <div class="paper">
-    <span class="no">Scroll {roman}</span>
+    {tier === "flagship" && <span class="ribbon">Flagship</span>}
     {cover && <img src={cover} alt="" loading="lazy" />}
-    <h3>{title}</h3>
-    <p class="meta">
-      <span class="status" data-status={status}>{status === "shipped" ? "Complete" : "In progress"}</span>
-      {` · ${year} · ${domains[0]}`}
-    </p>
-    <p class="summary">{summary}</p>
-    <span class="unroll">Unroll the scroll ›</span>
+    <div class="text">
+      <span class="no">Scroll {roman}</span>
+      <h3>
+        <a href={`/projects/${project.id}/`} data-scroll-open={project.id}>{title}</a>
+      </h3>
+      <p class="meta">
+        <span class="status" data-status={status}>{status === "shipped" ? "Complete" : "In progress"}</span>
+        {` · ${year} · ${domains[0]}`}
+      </p>
+      <p class="summary">{summary}</p>
+      {
+        wide && highlights.length > 0 && (
+          <ul class="deeds">
+            {highlights.map((h) => (
+              <li>{h}</li>
+            ))}
+          </ul>
+        )
+      }
+      <div class="foot">
+        <span class="unroll">Unroll the scroll ›</span>
+        {demo && <a class="live" href={demo}>Live dashboard ↗</a>}
+      </div>
+    </div>
   </div>
   <span class="rod bottom" aria-hidden="true"></span>
-</a>
+</article>
 
 <style>
   .scroll-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-    color: inherit;
     transition: transform 0.35s ease;
   }
   .scroll-card:hover {
     transform: translateY(-6px) rotate(-0.6deg);
-    color: inherit;
+  }
+  .wide:hover {
+    transform: translateY(-4px);
   }
   /* wooden rods with knobs */
   .rod {
@@ -72,7 +93,7 @@ const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     margin-block: -6px;
     padding: 26px 22px 22px;
     background:
@@ -81,6 +102,27 @@ const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
       linear-gradient(90deg, rgba(150, 105, 40, 0.18), transparent 8%, transparent 92%, rgba(150, 105, 40, 0.18)),
       var(--parchment);
     box-shadow: 0 14px 30px rgba(60, 40, 10, 0.18);
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .ribbon {
+    position: absolute;
+    top: 14px;
+    right: -8px;
+    z-index: 2;
+    padding: 4px 14px;
+    background: var(--terracotta);
+    color: #fff6df;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(80, 30, 10, 0.3);
   }
   .no {
     font-family: var(--font-display);
@@ -109,6 +151,20 @@ const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
     text-align: center;
     margin-top: 4px;
   }
+  h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* the title link covers the whole card */
+  h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .scroll-card:hover h3 {
+    color: var(--terracotta);
+  }
   .meta {
     margin: 0;
     text-align: center;
@@ -120,10 +176,31 @@ const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
     font-size: 1rem;
     color: #4a3b26;
   }
-  .unroll {
+  .deeds {
+    display: grid;
+    gap: 4px;
+    margin: 4px 0 0;
+    padding: 12px 0 0;
+    list-style: none;
+    border-top: 1px solid rgba(150, 110, 50, 0.35);
+    font-size: 0.98rem;
+    color: #3b3226;
+  }
+  .deeds li::before {
+    content: "✦ ";
+    color: var(--gold);
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 18px;
     margin-top: auto;
     padding-top: 6px;
-    text-align: center;
+  }
+  .unroll,
+  .live {
     font-family: var(--font-display);
     font-size: 0.78rem;
     letter-spacing: 0.14em;
@@ -132,5 +209,56 @@ const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
   }
   .scroll-card:hover .unroll {
     color: var(--terracotta);
+  }
+  /* sits above the card-wide title link so it stays clickable */
+  .live {
+    position: relative;
+    z-index: 2;
+    padding: 4px 10px;
+    border: 1px solid var(--sea);
+    border-radius: 999px;
+    color: var(--sea);
+    text-decoration: none;
+    background: #fff6df;
+  }
+  .live:hover {
+    background: var(--sea);
+    color: #fff;
+  }
+
+  /* flagship: image beside the text */
+  .wide .paper {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 28px;
+    align-items: start;
+    padding: 30px 30px 26px;
+  }
+  .wide img {
+    aspect-ratio: 4 / 3;
+  }
+  .wide .no,
+  .wide h3,
+  .wide .meta {
+    text-align: left;
+  }
+  .wide h3 {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  }
+  .wide .summary {
+    font-size: 1.08rem;
+  }
+  .wide .foot {
+    justify-content: flex-start;
+  }
+  @media (max-width: 760px) {
+    .wide .paper {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 26px 20px 22px;
+    }
+    .wide img {
+      aspect-ratio: 16 / 9;
+    }
   }
 </style>

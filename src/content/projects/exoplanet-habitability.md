@@ -1,9 +1,9 @@
 ---
 title: Exoplanet Habitability
 summary: Predicts which unresolved Kepler candidates are likely real, then scores every planet for habitable-zone status and Earth similarity.
-tier: featured
+tier: flagship
 status: shipped
-order: 2
+order: 3
 year: 2026
 domains: [Space, Data Science]
 stack: [Python, scikit-learn, XGBoost, TensorFlow, SHAP, Streamlit]

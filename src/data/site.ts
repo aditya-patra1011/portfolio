@@ -27,7 +27,10 @@ export const site = {
 } as const;
 
 // Shown as the career cards. Facts come from the résumé.
-export const experience = [
+type Club = { name: string; role: string; since: string; text: string };
+type Experience = { period: string; role: string; org: string; text: string; clubs?: Club[] };
+
+export const experience: Experience[] = [
   {
     period: "Jun 2026 – Aug 2026",
     role: "ML & Data Intern",
@@ -42,9 +45,23 @@ export const experience = [
   },
   {
     period: "2023 – Present",
-    role: "Logistics & Organizing",
-    org: "Concordia Club",
-    text: "Ran logistics for 3+ university events, including Model UN, with 100+ participants.",
+    role: "Concordia · Tech For Need",
+    org: "University Clubs",
+    text: "",
+    clubs: [
+      {
+        name: "Concordia Club",
+        role: "Logistics & Organizing",
+        since: "2023",
+        text: "Ran logistics for 3+ university events, including Model UN, with 100+ participants.",
+      },
+      {
+        name: "Tech For Need",
+        role: "Technical Team",
+        since: "Oct 2026",
+        text: "Joined the technical team at the start of October 2026.",
+      },
+    ],
   },
   {
     period: "2024",
