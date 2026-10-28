@@ -8,7 +8,8 @@ import { getProjects } from "../lib/projects";
 import { site, experience, stats, services, skills } from "../data/site";
 
 const projects = await getProjects();
-const showcase = projects.filter((p) => p.data.tier !== "more").slice(0, 6);
+const flagships = projects.filter((p) => p.data.tier === "flagship");
+const featured = projects.filter((p) => p.data.tier === "featured");
 const numerals = ["I", "II", "III", "IV"];
 ---
 
@@ -122,7 +123,21 @@ const numerals = ["I", "II", "III", "IV"];
               <span class="period">{e.period}</span>
               <h3>{e.org}</h3>
               <p class="role">{e.role}</p>
-              <p>{e.text}</p>
+              {e.clubs ? (
+                <ul class="clubs">
+                  {e.clubs.map((c) => (
+                    <li>
+                      <strong>{c.name}</strong>
+                      <span class="club-meta">
+                        {c.role} · since {c.since}
+                      </span>
+                      <span class="club-text">{c.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{e.text}</p>
+              )}
             </article>
           ))
         }
@@ -205,7 +220,7 @@ const numerals = ["I", "II", "III", "IV"];
     class="hall treasury"
     id="treasury"
     data-tour-title="The Treasury"
-    data-tour="The treasury! Every project here is a scroll. Click one to unroll it. OrbitGuard is his current quest."
+    data-tour="The treasury! Every project here is a scroll. Click one to unroll it. His three flagships come first, and OrbitGuard's dashboard is live."
     data-tour-point="#treasury .scroll-card"
   >
     <div class="wrap">
@@ -215,8 +230,12 @@ const numerals = ["I", "II", "III", "IV"];
         title="The Treasury"
         intro="Every project is kept on a scroll. Click one to unroll it."
       />
+      <div class="flagships">
+        {flagships.map((p, i) => <ScrollCard project={p} index={i} variant="flagship" />)}
+      </div>
+      <h3 class="sub" data-reveal>More scrolls</h3>
       <div class="scrolls">
-        {showcase.map((p, i) => <ScrollCard project={p} index={i} />)}
+        {featured.map((p, i) => <ScrollCard project={p} index={flagships.length + i} />)}
       </div>
       <div class="more" data-reveal>
         <a class="btn gold" href="/projects/">Enter the full treasury · {projects.length} scrolls</a>
@@ -571,6 +590,33 @@ const numerals = ["I", "II", "III", "IV"];
     margin: 0;
     font-size: 1rem;
   }
+  .clubs {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .clubs li {
+    display: grid;
+    gap: 1px;
+    font-size: 0.98rem;
+  }
+  .clubs li + li {
+    padding-top: 12px;
+    border-top: 1px solid rgba(184, 137, 47, 0.35);
+  }
+  .clubs strong {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+  .club-meta {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--terracotta);
+  }
   .coins {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -698,6 +744,20 @@ const numerals = ["I", "II", "III", "IV"];
       radial-gradient(ellipse at 50% 0%, rgba(184, 137, 47, 0.16), transparent 60%),
       rgba(217, 207, 187, 0.3);
     border-top: 1px solid var(--line);
+  }
+  .flagships {
+    display: grid;
+    gap: 48px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding-inline: 10px;
+  }
+  .sub {
+    margin: clamp(56px, 8vw, 80px) 0 32px;
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-3);
   }
   .scrolls {
     display: grid;
