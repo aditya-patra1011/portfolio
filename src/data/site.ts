@@ -5,7 +5,7 @@ export const site = {
   shortName: "Aditya Patra",
   role: "ML Engineer in the making",
   tagline:
-    "I build machine-learning systems end to end, from messy public data to models I can explain and services that run. Lately that means satellites, Formula 1 and exoplanets.",
+    "I build machine-learning systems end to end, from messy public data to models I can explain and services that run. Lately that means satellites, Formula 1, exoplanets and craters on the Moon.",
   location: "Pune, India",
   // Optional portrait for the hero and about sections, e.g. "/me.jpg" in public/. Leave null for the monogram.
   photo: null as string | null,
@@ -15,8 +15,8 @@ export const site = {
     note: "3rd year",
   },
   now: {
-    project: "orbitguard",
-    text: "Now building OrbitGuard: collision screening for 14k+ objects in orbit",
+    project: "xg-spark",
+    text: "Now building xG-Spark: an expected-goals model on Apache Spark",
   },
   links: {
     github: "https://github.com/aditya-patra1011",
@@ -35,7 +35,7 @@ export const experience: Experience[] = [
     period: "Jun 2026 – Aug 2026",
     role: "ML & Data Intern",
     org: "CloudExperts.co",
-    text: "Reviewed production code for a RAG web app on React/TypeScript and AWS Lambda; worked on stock market analysis.",
+    text: "Built a Nifty 500 stock screener and broker automation on Zerodha's Kite Connect API, an anomaly-detection pipeline for warehouse sensor data, and reviewed a RAG web app's code.",
   },
   {
     period: "2024 – 2028",
@@ -75,15 +75,15 @@ export const experience: Experience[] = [
 export const stats = [
   { value: "14K+", label: "Objects screened", note: "OrbitGuard" },
   { value: "23", label: "F1 circuits modelled", note: "BoxBox" },
-  { value: "9.5K", label: "Kepler objects classified", note: "Kepler" },
-  { value: "0.99", label: "ROC-AUC, held-out set", note: "Kepler" },
+  { value: "7K", label: "Planets scored for habitability", note: "Exoplanet Habitability" },
+  { value: "19%", label: "Lower next-day AQI error", note: "AQI Forecasting" },
 ];
 
 export const services = [
   {
     icon: "ml",
     title: "ML Engineering",
-    text: "Models that go past the notebook: validated, explained with SHAP, tested, and packaged so someone else can run them.",
+    text: "Models that go past the notebook: validated on data they never saw, explained with SHAP, tested, and served with FastAPI, ONNX and Docker.",
   },
   {
     icon: "stats",
@@ -93,7 +93,7 @@ export const services = [
   {
     icon: "dash",
     title: "Dashboards & Apps",
-    text: "Interactive Plotly Dash and Streamlit apps that turn a model's output into something people can explore.",
+    text: "Interactive Plotly Dash, Streamlit and Next.js apps that turn a model's output into something people can explore.",
   },
 ];
 
@@ -101,8 +101,11 @@ export const skills: { group: string; items: string[] }[] = [
   { group: "Languages", items: ["Python", "SQL (MySQL)", "Java", "C"] },
   {
     group: "ML & data",
-    items: ["scikit-learn", "XGBoost", "TensorFlow/Keras", "SHAP", "pandas", "NumPy", "SciPy", "lifelines"],
+    items: ["scikit-learn", "XGBoost", "PyTorch", "TensorFlow/Keras", "SHAP", "pandas", "NumPy", "SciPy", "PySpark"],
   },
-  { group: "Apps & viz", items: ["Plotly Dash", "Streamlit", "Plotly", "Matplotlib", "Seaborn"] },
-  { group: "Engineering", items: ["Git & GitHub", "pytest", "Jupyter", "MySQL Workbench"] },
+  { group: "Apps & viz", items: ["Plotly Dash", "Streamlit", "Next.js", "Plotly", "Matplotlib"] },
+  {
+    group: "Engineering",
+    items: ["FastAPI", "ONNX", "Docker", "PostgreSQL", "GitHub Actions", "pytest", "Git"],
+  },
 ];
