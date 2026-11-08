@@ -58,6 +58,7 @@ const numerals = ["I", "II", "III", "IV"];
             <a class="btn" href="#oracle">Enter the temple</a>
             <a class="btn gold" href="#treasury">See the treasury</a>
           </div>
+          <a class="now" href={`/projects/${site.now.project}/`}>{site.now.text} ›</a>
         </div>
         <Column class="col" /><Column class="col outer" />
       </div>
@@ -427,6 +428,17 @@ const numerals = ["I", "II", "III", "IV"];
     justify-content: center;
     gap: 12px;
     margin-top: 26px;
+  }
+  .now {
+    display: inline-block;
+    margin-top: 20px;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--terracotta);
+    text-decoration: none;
+  }
+  .now:hover {
+    text-decoration: underline;
   }
   .steps {
     display: grid;
