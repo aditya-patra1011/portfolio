@@ -12,7 +12,7 @@ highlights:
   - About 81% of detections are real craters, after a by-eye audit
   - Calibrated confidence and drift monitoring on the served model
 repo: https://github.com/aditya-patra1011/lunar_crater_detection
-cover: /projects/lunar-tiles.png
+cover: /projects/lunar-dashboard.png
 ---
 
 ## The problem
